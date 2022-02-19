@@ -124,7 +124,7 @@ export default {
         data.append('stock', result.value.stock)
         data.append('image', result.value.image)
         data.append('store', result.value.store)
-        await axios.post('http://localhost:3000/api/v1/addproduct', data)
+        await axios.post('https://test-eshop-api.herokuapp.com/api/v1/addproduct', data)
 
         this.$swal.fire({
           type: 'success',
