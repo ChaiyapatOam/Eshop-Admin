@@ -155,8 +155,8 @@ export default {
         address: this.address,
       }
       if(this.store, this.email,this.password,this.phone,this.address){
-        //  const url = "https://test-eshop-api.herokuapp.com/api/v1"
-        // const res = await axios.post(url+'/store',body)
+         const url = "https://test-eshop-api.herokuapp.com/api/v1"
+        const res = await axios.post(url+'/store',body)
         // console.log(res);
        
       } 

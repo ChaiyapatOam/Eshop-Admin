@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     async fetchData() {
-      const { data } = await axios.get(`http://localhost:3000/api/v1/users`, {
+      const { data } = await axios.get(`https://test-eshop-api.herokuapp.com/api/v1/users`, {
         headers: {
           'Content-Type': 'Application/JSON',
         },

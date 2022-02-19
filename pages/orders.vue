@@ -87,7 +87,7 @@ export default {
   methods: {
     async fetchData() {
       const { data } = await axios.get(
-        `http://localhost:3000/api/v1/orders/${this.store}`,
+        `https://test-eshop-api.herokuapp.com/api/v1/orders/${this.store}`,
         {
           headers: {
             'Content-Type': 'Application/JSON',

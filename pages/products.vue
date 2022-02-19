@@ -25,7 +25,7 @@
             <td class="price">{{ product.price }}</td>
             <td class="stock">{{ product.stock }}</td>
             <td class="edit">
-           <!--   <button class="edit btn btn-warning">
+              <!--   <button class="edit btn btn-warning">
                 <a :href="`/admin/product/${product._id}`"> แก้ไข</a>
               </button> -->
               <button
@@ -65,16 +65,16 @@ export default {
     const storeAuth = StoreAuth.getStoreAuth()
     this.store = storeAuth.store
 
-
     try {
-    if (this.store == null) this.$router.push('/login')
+      if (this.store == null) this.$router.push('/login')
       await this.fetchData()
     } catch (err) {}
   },
   methods: {
     async fetchData() {
+      const url = 'https://test-eshop-api.herokuapp.com/api/v1'
       const { data } = await axios.get(
-        `http://localhost:3000/api/v1/store/product/${this.store}`,
+        `${url}/store/product/${this.store}`,
         {
           headers: {
             'Content-Type': 'Application/JSON',
@@ -137,9 +137,9 @@ export default {
     },
     async onUpdateProduct(id) {
       const product = await axios.get(
-        `http://localhost:3000/api/v1/products/${id}`
+        `https://test-eshop-api.herokuapp.com/api/v1/products/${id}`
       )
-      console.log(product)
+      // console.log(product)
       this.$swal({
         title: 'แก้ไขสินค้า',
         confirmButtonText: 'แก้ไข',
@@ -169,7 +169,7 @@ export default {
         data.append('stock', result.value.stock)
         data.append('image', result.value.image)
         data.append('store', result.value.store)
-        await axios.put('http://localhost:3000/api/v1/products', data)
+        await axios.put('https://test-eshop-api.herokuapp.com/api/v1/products', data)
 
         this.$swal.fire({
           type: 'success',
@@ -198,13 +198,12 @@ export default {
               store: this.store,
             }
             const res = await axios.put(
-              `http://localhost:3000/api/v1/products/delete/${id}`,
+              `https://test-eshop-api.herokuapp.com/api/v1/products/delete/${id}`,
               body
             )
           } else {
             console.log('error!!!!')
           }
-         
         })
     },
   },

@@ -95,7 +95,8 @@ export default {
   },
   methods: {
     async fetchData() {
-      const { data } = await axios.get(`http://localhost:3000/api/v1/store`, {
+      const url = "https://test-eshop-api.herokuapp.com/api/v1"
+      const { data } = await axios.get(`${url}/store`, {
         headers: {
           'Content-Type': 'Application/JSON',
         },
@@ -103,21 +104,20 @@ export default {
       this.store = data
     },
     Register() {
-     const re =  this.$router.push('/register')
-     window.open(re.href, '_blank');
+       this.$router.push('/register')
     },
     async Active(store) {
       const body = {
         active : false
       }
-      await axios.put(`http://localhost:3000/api/v1/store/${store}`, body)
+      await axios.put(`https://test-eshop-api.herokuapp.com/api/v1/store/${store}`, body)
       await this.fetchData()
     },
     async InActive(store) {
       const body = {
         active : true
       }
-      await axios.put(`http://localhost:3000/api/v1/store/${store}`, body)
+      await axios.put(`https://test-eshop-api.herokuapp.com/api/v1/store/${store}`, body)
       await this.fetchData()
     },
   },
