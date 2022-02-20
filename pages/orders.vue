@@ -39,8 +39,8 @@
 
             <td class="total">{{ o.total }}</td>
 
-            <td class="total">{{ o.DateOrder }}</td>
-
+            <td class="total">{{ moment(o.DateOrder)  }}</td>
+    
             <td class="status">
               <select name="" class="a-select-option">
                 <option>
@@ -64,6 +64,7 @@ import Layout from '../components/Layout.vue'
 
 import { Jwt, StoreAuth } from '../libs/sessionStorage'
 import axios from 'axios'
+import moment from 'moment'
 
 import '../styles/layout.css'
 
@@ -107,6 +108,9 @@ export default {
       this.orders = data
       console.log(orders)
     },
+    moment(date){
+      return moment(date).format("DD/MM/YYYY HH:mm")
+    }
   },
 }
 </script>
