@@ -157,6 +157,21 @@ import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
 
 export default {
   name: 'app',
+    head() {
+    return {
+      title: 'สร้างร้านค้า',
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        {
+          hid: 'สร้างร้านค้า',
+          name: 'สร้างร้านค้า',
+          content: 'มาสร้างร้านค้ากับเรา เพื่อจัดการสินค้า',
+        },
+      ],
+      link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    }
+  },
   data() {
     return {
       user: {

@@ -3,7 +3,7 @@
     <Sidebar />
     <div id="content-wrapper" class="container-fluid">
       <h1>Dashboard</h1>
-      <h2>{{time}}</h2>
+      <h2>{{ time }}</h2>
       <div class="row">
         <!-- Earnings (Monthly) Card Example -->
         <div class="col-xl-3 col-md-6 mb-4">
@@ -129,6 +129,21 @@ import LineChart from '../components/LineChart.vue'
 import Bar from '../components/Bar.vue'
 import moment from 'moment'
 export default {
+  head() {
+    return {
+      title: 'Dashboard',
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        {
+          hid: 'description',
+          name: 'description',
+          content: 'my website description',
+        },
+      ],
+      link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    }
+  },
   components: {
     Sidebar,
     Loading,
@@ -145,7 +160,7 @@ export default {
   },
   data() {
     return {
-      time: moment("2022-02-19T16:21:01.703+00:00").format("dddd DD/MM/YYYY HH:mm:ss "),
+      time: null,
       chartData: {
         labels: ['a', 'b', 'c'],
         datasets: [
@@ -188,6 +203,11 @@ export default {
         },
       },
     }
+  },
+  mounted() {
+    setInterval(() => {
+      this.time = moment(Date()).format('dddd DD/MM/YYYY HH:mm:ss')
+    }, 100)
   },
 }
 </script>

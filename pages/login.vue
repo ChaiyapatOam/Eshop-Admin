@@ -65,6 +65,16 @@ export default {
   head() {
     return {
       title: 'เข้าสู่ระบบ',
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        {
+          hid: 'login',
+          name: 'login',
+          content: 'เข้าสู่ระบบหลังร้าน',
+        },
+      ],
+      link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     }
   },
   data() {
@@ -90,29 +100,29 @@ export default {
 
         console.log(res)
         console.log(res.data)
-         if (!res){
-           console.log("error");
-         }
+        if (!res) {
+          console.log('error')
+        }
         if (res.status == 200) {
-          this.$swal.fire({
-            type: 'success',
-            title: "สำเร็จ",
-            timer: 1000,
-            showConfirmButton: false,
-          }).then(
-            this.$router.push('/dashboard')
-          )    
+          this.$swal
+            .fire({
+              type: 'success',
+              title: 'สำเร็จ',
+              timer: 1000,
+              showConfirmButton: false,
+            })
+            .then(this.$router.push('/dashboard'))
           Jwt.setJwtToken(res.data.token)
           StoreAuth.setStoreAuth(res.data.data)
         }
       } catch (err) {
         console.error(err)
-          this.$swal.fire({
-            type: 'error',
-            title: "ชื่อหรือรหัสผ่านไม่ถูกต้อง",
-            timer: 1500,
-            showConfirmButton: false,
-          })
+        this.$swal.fire({
+          type: 'error',
+          title: 'ชื่อหรือรหัสผ่านไม่ถูกต้อง',
+          timer: 1500,
+          showConfirmButton: false,
+        })
       }
       this.$v.$touch()
       if (this.$v.$invalid) {
