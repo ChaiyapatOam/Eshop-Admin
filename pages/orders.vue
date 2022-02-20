@@ -21,34 +21,36 @@
             <td class="name" scope="row">{{ o.store }}</td>
             <td class="price">{{ o.phone }}</td>
             <td class="price">{{ o.address }}</td>
+
+            <!-- Product  -->
             <td class="product">
-              <ul  class="list-group">
+              <ul class="list-group">
                 <li
                   class="list-group-item"
                   v-for="(item, index) in JSON.parse(o.cart)"
                   :key="index"
                 >
                   {{ item.product.name }}
-                  {{ item.product.price  }}
+                  {{ item.product.price }}
                   {{ 'X' + item.quantity }} ชิ้น
                 </li>
               </ul>
-              <!--
-              <ul  class="list-group">
-                <li
-                  class="list-group-item"
-                  v-for="(item, index) in o.orderItems"
-                  :key="index"
-                >
-                  {{ item.product.name }}
-                  {{ item.product.price }}
-                  {{ 'จำนวน ' + item.quantity + ' ชิ้น' }}
-                </li>
-              </ul> -->
             </td>
+
             <td class="total">{{ o.total }}</td>
+
             <td class="total">{{ o.DateOrder }}</td>
-            <td class="total">{{ o.status }}</td>
+
+            <td class="status">
+              <select name="" class="a-select-option">
+                <option>
+                  {{ o.status }}
+                </option>
+                <option>
+                  purchase
+                </option>
+              </select>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -66,6 +68,11 @@ import axios from 'axios'
 import '../styles/layout.css'
 
 export default {
+  head() {
+    return {
+      title: 'ออเดอร์',
+    }
+  },
   components: {
     Sidebar,
   },
@@ -98,7 +105,7 @@ export default {
       // console.log(data[0])
 
       this.orders = data
-      console.log(orders);
+      console.log(orders)
     },
   },
 }

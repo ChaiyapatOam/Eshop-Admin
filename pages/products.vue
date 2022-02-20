@@ -52,6 +52,11 @@ import axios from 'axios'
 import '../styles/layout.css'
 
 export default {
+  head() {
+    return {
+      title: 'สินค้า',
+    }
+  },
   components: {
     Sidebar,
   },
@@ -73,15 +78,12 @@ export default {
   methods: {
     async fetchData() {
       const url = 'https://test-eshop-api.herokuapp.com/api/v1'
-      const { data } = await axios.get(
-        `${url}/store/product/${this.store}`,
-        {
-          headers: {
-            'Content-Type': 'Application/JSON',
-            // Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      const { data } = await axios.get(`${url}/store/admin/${this.store}`, {
+        headers: {
+          'Content-Type': 'Application/JSON',
+          // Authorization: `Bearer ${token}`,
+        },
+      })
 
       // console.log(data[0].products)
 
@@ -95,7 +97,7 @@ export default {
   <input type="text" id="name" class="swal2-input" placeholder="ชื่อสินค้า">
   <input type="text" id="price"  class="swal2-input" placeholder="ราคา" required>
   <input type="text" id="description" class="swal2-input" placeholder="คำอธิบาย">
-  <input type="number" id="stock" class="swal2-input" placeholder="สต็อค">
+  <input type="number" id="stock" class="swal2-input" placeholder="สต็อค" >
   <input type="file" accept="image/png, image/jpeg" id="image" class="swal2-input" >`,
         confirmButtonText: 'เพิ่ม',
         focusConfirm: false,
@@ -107,6 +109,24 @@ export default {
           const description = this.$swal
             .getPopup()
             .querySelector('#description').value
+            if(!name) {
+              this.$swal.showValidationMessage("โปรดกรอกชื่อสินค้า")
+            }
+            if(!price || price > 10000) {
+              this.$swal.showValidationMessage("โปรดกรอกราคาสินค้า")
+            }
+            if(isNaN(price)) {
+              this.$swal.showValidationMessage("โปรดกรอกราคาสินค้าเป็นตัวเลข")
+            }
+            if(!image) {
+              this.$swal.showValidationMessage("โปรดใส่รูปภาพสินค้า")
+            }
+            if(!stock) {
+              this.$swal.showValidationMessage("โปรดใส่สต็อคสินค้า")
+            }
+            if(stock <=0) {
+              this.$swal.showValidationMessage("สต็อคสินค้าต้องมากกว่า 0")
+            }
           return {
             name,
             description,
@@ -124,7 +144,10 @@ export default {
         data.append('stock', result.value.stock)
         data.append('image', result.value.image)
         data.append('store', result.value.store)
-        await axios.post('https://test-eshop-api.herokuapp.com/api/v1/addproduct', data)
+        await axios.post(
+          'https://test-eshop-api.herokuapp.com/api/v1/addproduct',
+          data
+        )
 
         this.$swal.fire({
           type: 'success',
@@ -169,7 +192,10 @@ export default {
         data.append('stock', result.value.stock)
         data.append('image', result.value.image)
         data.append('store', result.value.store)
-        await axios.put('https://test-eshop-api.herokuapp.com/api/v1/products', data)
+        await axios.put(
+          'https://test-eshop-api.herokuapp.com/api/v1/products',
+          data
+        )
 
         this.$swal.fire({
           type: 'success',
@@ -186,7 +212,7 @@ export default {
           title: 'ลบสินค้า',
           showCancelButton: true,
           cancelButtonText: 'ยกเลิก',
-          text: `คุณต้องการลบสินค้า  หรือไม่`,
+          text: `คุณต้องการลบสินค้า ${id} หรือไม่`,
           type: 'warning',
           confirmButtonText: 'ลบ',
           confirmButtonColor: 'rgb(239, 68, 68)',

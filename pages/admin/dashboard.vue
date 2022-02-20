@@ -1,11 +1,12 @@
 <template>
   <div class="root">
     <Sidebar />
-      <h1>Hello</h1>
-      <h1>ร้านค้าทั้งหมด</h1> 
+    <h1>Hello</h1>
+    <h1>ร้านค้าทั้งหมด</h1>
     <div class="chart-div">
       <LineChart :chartData="chartData" />
-    </div>  <Loading />
+    </div>
+    <Loading />
   </div>
 </template>
 
@@ -14,7 +15,7 @@ import { Jwt } from '../../libs/sessionStorage'
 import { mapMutations } from 'vuex'
 import Loading from '../../components/Loading.vue'
 import Sidebar from '../../components/Sidebar.vue'
-import LineChart from '../..//components/LineChart.vue'
+import LineChart from '../../components/LineChart.vue'
 export default {
   components: {
     Sidebar,

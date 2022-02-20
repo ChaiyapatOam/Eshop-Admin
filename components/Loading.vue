@@ -1,6 +1,6 @@
 <template>
   <div class="loading" v-if="this.$store.state.loading.isLoading">
-    <h1>Loading...</h1>
+    <!-- <h1>Loading...</h1> -->
   </div>
 </template>
 

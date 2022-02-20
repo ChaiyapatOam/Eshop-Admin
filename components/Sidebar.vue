@@ -1,8 +1,6 @@
 <template>
-  <div>
+  <div class="container">
     <head>
-      <meta charset="UTF-8" />
-
       <!-- Boxicons CDN Link -->
       <link
         href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
@@ -447,6 +445,56 @@ nav .profile-details i {
   color: #333;
 }
 /* Responsive Media Query */
+@media (max-width: 1600px) {
+  .sidebar {
+    width: 200px;
+  }
+  .sidebar.active {
+    width: 220px;
+  }
+  .home-section {
+    width: calc(100% - 60px);
+    left: 60px;
+  }
+  .sidebar.active ~ .home-section {
+    /* width: calc(100% - 220px); */
+    overflow: hidden;
+    left: 220px;
+  }
+  .home-section nav {
+    width: calc(100% - 60px);
+    left: 60px;
+  }
+  .sidebar.active ~ .home-section nav {
+    width: calc(100% - 220px);
+    left: 220px;
+  }
+}
+@media (max-width: 1515px) {
+  .sidebar {
+    width: 60px;
+  }
+  .sidebar.active {
+    width: 220px;
+  }
+  .home-section {
+    width: calc(100% - 60px);
+    left: 60px;
+  }
+  .sidebar.active ~ .home-section {
+    /* width: calc(100% - 220px); */
+    overflow: hidden;
+    left: 220px;
+  }
+  .home-section nav {
+    width: calc(100% - 60px);
+    left: 60px;
+  }
+  .sidebar.active ~ .home-section nav {
+    width: calc(100% - 220px);
+    left: 220px;
+  }
+}
 @media (max-width: 1240px) {
   .sidebar {
     width: 60px;

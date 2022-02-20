@@ -1,200 +1,208 @@
 <template>
-  <div>
-    <head>
-      <!-- <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script> -->
-      <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-      <!------ Include the above in your HEAD tag ---------->
-
-      <link
-        rel="stylesheet"
-        href="https://use.fontawesome.com/releases/v5.0.8/css/all.css"
-      />
-    </head>
-
+  <div class="jumbotron">
     <div class="container">
+      <div class="row">
+        <div class="col-sm-8 offset-sm-2">
+          <div>
+            <h2 class="text-center">สร้างร้านค้าของคุณ</h2>
+            <form @submit.prevent="handleSubmit">
 
-      <div class="card bg-light">
-        <article class="card-body mx-auto" style="max-width: 400px">
-          <h4 class="card-title mt-3 text-center">สร้างร้านค้าของคุณ</h4>
-          <p class="text-center"></p>
-
-          <form>
-            <div class="form-group input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <i class="fa fa-user"></i>
-                </span>
+              <div class="form-group">
+                <label for="store">ชื่อร้าน</label>
+                <input
+                  type="text"
+                  v-model="user.store"
+                  id="store"
+                  name="store"
+                  class="form-control"
+                  :class="{ 'is-invalid': submitted && $v.user.store.$error }"
+                />
+                <div
+                  v-if="submitted && !$v.user.store.required"
+                  class="invalid-feedback"
+                >
+                  โปรดใส่ชื่อร้าน
+                </div>
               </div>
-              <input
-                class="form-control"
-                placeholder="ชื่อร้าน"
-                type="text"
-                v-model="store"
-                required
-              />
-            </div>
-            <div class="form-group input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <i class="fa fa-address-book"></i>
-                </span>
-              </div>
-              <input
-                class="form-control"
-                placeholder="ที่อยู่ร้าน"
-                type="text"
-                v-model="address"
-                required
 
-              />
-            </div>
-
-            <!-- form-group// -->
-            <div class="form-group input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <i class="fa fa-phone"></i>
-                </span>
+              <!-- ที่อยู่ร้าน -->
+              <div class="form-group">
+                <label for="address">ที่อยู่ร้าน</label>
+                <input
+                  type="text"
+                  v-model="user.address"
+                  id="address"
+                  name="address"
+                  class="form-control"
+                  :class="{ 'is-invalid': submitted && $v.user.address.$error }"
+                />
+                <div
+                  v-if="submitted && !$v.user.address.required"
+                  class="invalid-feedback"
+                >
+                  โปรดใส่ที่อยู่ร้าน
+                </div>
               </div>
-              <input
-                class="form-control"
-                placeholder="เบอร์โทรศัพท์"
-                type="text"
-                v-model="phone"
-                required
 
-              />
-            </div>
-            <!-- form-group// -->
-            <div class="form-group input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <i class="fa fa-envelope"></i>
-                </span>
+              <!-- เบอร์โทรศัพท์ -->
+              <div class="form-group">
+                <label for="phone">เบอร์โทรศัพท์</label>
+                <input
+                  type="text"
+                  v-model="user.phone"
+                  id="phone"
+                  name="phone"
+                  class="form-control"
+                  :class="{ 'is-invalid': submitted && $v.user.phone.$error }"
+                />
+                <div
+                  v-if="submitted && !$v.user.phone.required"
+                  class="invalid-feedback"
+                >
+                  โปรดใส่ที่เบอร์โทรศัพท์
+                </div>
               </div>
-              <input
-                class="form-control"
-                placeholder="อีเมล"
-                type="email"
-                v-model="email"
-                required
 
-              />
-            </div>
-            <!-- form-group end.// -->
-            <div class="form-group input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <i class="fa fa-lock"></i>
-                </span>
+              <!-- อีเมล -->
+              <div class="form-group">
+                <label for="email">อีเมล</label>
+                <input
+                  type="email"
+                  v-model="user.email"
+                  id="email"
+                  name="email"
+                  class="form-control"
+                  :class="{ 'is-invalid': submitted && $v.user.email.$error }"
+                />
+                <div
+                  v-if="submitted && $v.user.email.$error"
+                  class="invalid-feedback"
+                >
+                  <span v-if="!$v.user.email.required">โปรดใส่อีเมล</span>
+                  <span v-if="!$v.user.email.email">อีเมลไม่ถูกต้อง</span>
+                </div>
               </div>
-              <input
-                class="form-control"
-                placeholder="รหัสผ่าน"
-                type="password"
-                v-model="password"
-                required
 
-              />
-            </div>
-            <!-- form-group// -->
-            <div class="form-group input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text">
-                  <i class="fa fa-lock"></i>
-                </span>
+              <!-- password  -->
+              <div class="form-group">
+                <label for="password">รหัสผ่าน</label>
+                <input
+                  type="password"
+                  v-model="user.password"
+                  id="password"
+                  name="password"
+                  class="form-control"
+                  :class="{
+                    'is-invalid': submitted && $v.user.password.$error,
+                  }"
+                />
+                <div
+                  v-if="submitted && $v.user.password.$error"
+                  class="invalid-feedback"
+                >
+                  <span v-if="!$v.user.password.required">โปรดใส่รหัสผ่าน</span>
+                  <span v-if="!$v.user.password.minLength"
+                    >รหัสผ่านต้องทีอย่างน้อย 6 ตัว</span
+                  >
+                </div>
               </div>
-              <input
-                class="form-control"
-                placeholder="รหัสผ่านอีกครั้ง"
-                type="password"
-                v-model="password1"
-                required
-              />
-            </div>
-            <!-- <p v-if="this.password != this.password1" class="text-center text-red">รหัสผ่านไม่ตรงกัน</p> -->
-            <!-- form-group// -->
-            <div class="form-group">
-              <button
-                class="btn btn-primary btn-block"
-                @click="POST"
-              >
-                เพิ่มร้านค้า
-              </button>
-            </div>
-            <!-- form-group// -->
-            <!-- <p class="text-center">Have an account? <a href="">Log In</a></p> -->
-          </form>
-        </article>
+
+              <!-- Confirm password  -->
+              <div class="form-group">
+                <label for="confirmPassword">รหัสผ่านอีกครั้ง</label>
+                <input
+                  type="password"
+                  v-model="user.confirmPassword"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  class="form-control"
+                  :class="{
+                    'is-invalid': submitted && $v.user.confirmPassword.$error,
+                  }"
+                />
+                <div
+                  v-if="submitted && $v.user.confirmPassword.$error"
+                  class="invalid-feedback"
+                >
+                  <span v-if="!$v.user.confirmPassword.required"
+                    >โปรดใส่รหัสผ่านอีกครั้ง</span
+                  >
+                  <span v-else-if="!$v.user.confirmPassword.sameAsPassword"
+                    >รหัสผ่านไม่ตรงกัน</span
+                  >
+                </div>
+              </div>
+              <div class="form-group text-center">
+                <h5>มีร้านค้าแล้ว? 
+                  <nuxt-link to="/login">เข้าสู่ระบบเลย</nuxt-link>
+                  </h5>
+              </div>
+              <!-- button  -->
+              <div class="form-group text-center">
+                <button class="btn btn-primary text-center">
+                  สร้างร้านค้า
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
-      <!-- card.// -->
     </div>
-    <!--container end.//-->
   </div>
 </template>
+
 <script>
 import axios from 'axios'
+import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
+
 export default {
+  name: 'app',
   data() {
     return {
-      store: '',
-      email: '',
-      phone: '',
-      password: '',
-      password1: '',
-      address: '',
+      user: {
+        store: '',
+        email: '',
+        phone: '',
+        password: '',
+        confirmPassword: '',
+        address: '',
+      },
+      submitted: false,
     }
   },
+  validations: {
+    user: {
+      store: { required },
+      address: { required },
+      email: { required, email },
+      phone: { required, minLength: minLength(10) },
+      password: { required, minLength: minLength(6) },
+      confirmPassword: { required, sameAsPassword: sameAs('password') },
+    },
+  },
   methods: {
-   async POST() {
+    async handleSubmit(e) {
+      this.submitted = true
       const body = {
-        store: this.store,
-        email: this.email,
-        password: this.password,
-        phone: this.phone,
-        address: this.address,
+        store: this.user.store,
+        email: this.user.email,
+        password: this.user.password,
+        phone: this.user.phone,
+        address: this.user.address,
       }
-      if(this.store, this.email,this.password,this.phone,this.address){
-         const url = "https://test-eshop-api.herokuapp.com/api/v1"
-        const res = await axios.post(url+'/store',body)
-        // console.log(res);
-       
-      } 
-      this.$router.push('/login')
+      const res = await axios.post(
+        'https://test-eshop-api.herokuapp.com/api/v1/store',
+        body
+      )
+      // console.log(res)
+      if(res.status == 200) {
+        this.$router.push('/login')
+      }
+      this.$v.$touch()
+      if (this.$v.$invalid) {
+        return
+      }
     },
   },
 }
 </script>
-
-<style scoped>
-.divider-text {
-  position: relative;
-  text-align: center;
-  margin-top: 15px;
-  margin-bottom: 15px;
-}
-.divider-text span {
-  padding: 7px;
-  font-size: 12px;
-  position: relative;
-  z-index: 2;
-}
-.divider-text:after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  border-bottom: 1px solid #ddd;
-  top: 55%;
-  left: 0;
-  z-index: 1;
-}
-
-.btn-facebook {
-  background-color: #405d9d;
-  color: #fff;
-}
-.btn-twitter {
-  background-color: #42aeec;
-  color: #fff;
-}
-</style>

@@ -1,9 +1,9 @@
 <template>
   <Layout>
     <h1>ร้านค้าทั้งหมด</h1>
-      <button class="btn btn-success" @click="Register" target="_blank">
-        เพิ่มร้านค้า
-      </button>
+    <button class="btn btn-success" @click="Register" target="_blank">
+      เพิ่มร้านค้า
+    </button>
     <main>
       <table class="table">
         <thead>
@@ -34,17 +34,16 @@
                 />
 
                 <!-- active == false -> ร้านปิดอยู่ -->
-                <input
-                  type="checkbox"
-                  @click="InActive(store.store)"
-                  v-else
-                />
+                <input type="checkbox" @click="InActive(store.store)" v-else />
                 <span class="slider round"></span>
               </label>
             </td>
             <!-- icon -->
             <td>
-              <a :href="`http://localhost:9000/${store.store}`" target="_blank">
+              <a
+                :href="`https://nuxt-eshop-shop.netlify.app/${store.store}`"
+                target="_blank"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -80,6 +79,11 @@ import axios from 'axios'
 import '../styles/layout.css'
 
 export default {
+  head() {
+    return {
+      title: 'ร้านค้า',
+    }
+  },
   components: {
     Sidebar,
   },
@@ -95,7 +99,7 @@ export default {
   },
   methods: {
     async fetchData() {
-      const url = "https://test-eshop-api.herokuapp.com/api/v1"
+      const url = 'https://test-eshop-api.herokuapp.com/api/v1'
       const { data } = await axios.get(`${url}/store`, {
         headers: {
           'Content-Type': 'Application/JSON',
@@ -104,20 +108,26 @@ export default {
       this.store = data
     },
     Register() {
-       this.$router.push('/register')
+      this.$router.push('/register')
     },
     async Active(store) {
       const body = {
-        active : false
+        active: false,
       }
-      await axios.put(`https://test-eshop-api.herokuapp.com/api/v1/store/${store}`, body)
+      await axios.put(
+        `https://test-eshop-api.herokuapp.com/api/v1/store/${store}`,
+        body
+      )
       await this.fetchData()
     },
     async InActive(store) {
       const body = {
-        active : true
+        active: true,
       }
-      await axios.put(`https://test-eshop-api.herokuapp.com/api/v1/store/${store}`, body)
+      await axios.put(
+        `https://test-eshop-api.herokuapp.com/api/v1/store/${store}`,
+        body
+      )
       await this.fetchData()
     },
   },

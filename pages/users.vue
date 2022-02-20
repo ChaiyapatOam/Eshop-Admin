@@ -32,6 +32,11 @@ import axios from 'axios'
 import '../styles/layout.css'
 
 export default {
+  head() {
+    return {
+      title: 'ลูกค้า',
+    }
+  },
   components: {
     Sidebar,
   },
@@ -47,13 +52,16 @@ export default {
   },
   methods: {
     async fetchData() {
-      const { data } = await axios.get(`https://test-eshop-api.herokuapp.com/api/v1/users`, {
-        headers: {
-          'Content-Type': 'Application/JSON',
-        },
-      })
+      const { data } = await axios.get(
+        `https://test-eshop-api.herokuapp.com/api/v1/users`,
+        {
+          headers: {
+            'Content-Type': 'Application/JSON',
+          },
+        }
+      )
 
-    //   console.log(data)
+      //   console.log(data)
       this.users = data
     },
   },
