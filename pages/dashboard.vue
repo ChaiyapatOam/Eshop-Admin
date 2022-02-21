@@ -122,7 +122,7 @@
 
 <script>
 import { Jwt } from '../libs/sessionStorage'
-import { mapMutations } from 'vuex'
+import { mapMutations,mapState } from 'vuex'
 import Loading from '../components/Loading.vue'
 import Sidebar from '../components/Sidebar.vue'
 import LineChart from '../components/LineChart.vue'

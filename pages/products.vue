@@ -30,7 +30,7 @@
               </button> -->
               <button
                 class="edit btn btn-outline-danger"
-                @click="onDelete(product._id, index)"
+                @click="onDelete(product._id, index,product.name)"
               >
                 ลบ
               </button>
@@ -47,6 +47,7 @@ import Sidebar from '../components/Sidebar.vue'
 import Layout from '../components/Layout.vue'
 
 import { Jwt, StoreAuth } from '../libs/sessionStorage'
+import {mapState} from 'vuex'
 import axios from 'axios'
 
 import '../styles/layout.css'
@@ -73,12 +74,14 @@ export default {
     try {
       if (this.store == null) this.$router.push('/login')
       await this.fetchData()
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   },
   methods: {
     async fetchData() {
       const url = 'https://test-eshop-api.herokuapp.com/api/v1'
-      const { data } = await axios.get(`${url}/store/admin/${this.store}`, {
+      const { data } = await axios.get(`${this.url}/store/admin/product/${this.store}`, {
         headers: {
           'Content-Type': 'Application/JSON',
           // Authorization: `Bearer ${token}`,
@@ -109,24 +112,24 @@ export default {
           const description = this.$swal
             .getPopup()
             .querySelector('#description').value
-            if(!name) {
-              this.$swal.showValidationMessage("โปรดกรอกชื่อสินค้า")
-            }
-            if(!price || price > 10000) {
-              this.$swal.showValidationMessage("โปรดกรอกราคาสินค้า")
-            }
-            if(isNaN(price)) {
-              this.$swal.showValidationMessage("โปรดกรอกราคาสินค้าเป็นตัวเลข")
-            }
-            if(!image) {
-              this.$swal.showValidationMessage("โปรดใส่รูปภาพสินค้า")
-            }
-            if(!stock) {
-              this.$swal.showValidationMessage("โปรดใส่สต็อคสินค้า")
-            }
-            if(stock <=0) {
-              this.$swal.showValidationMessage("สต็อคสินค้าต้องมากกว่า 0")
-            }
+          if (!name) {
+            this.$swal.showValidationMessage('โปรดกรอกชื่อสินค้า')
+          }
+          if (!price || price > 10000) {
+            this.$swal.showValidationMessage('โปรดกรอกราคาสินค้า')
+          }
+          if (isNaN(price)) {
+            this.$swal.showValidationMessage('โปรดกรอกราคาสินค้าเป็นตัวเลข')
+          }
+          if (!image) {
+            this.$swal.showValidationMessage('โปรดใส่รูปภาพสินค้า')
+          }
+          if (!stock) {
+            this.$swal.showValidationMessage('โปรดใส่สต็อคสินค้า')
+          }
+          if (stock <= 0) {
+            this.$swal.showValidationMessage('สต็อคสินค้าต้องมากกว่า 0')
+          }
           return {
             name,
             description,
@@ -145,7 +148,7 @@ export default {
         data.append('image', result.value.image)
         data.append('store', result.value.store)
         await axios.post(
-          'https://test-eshop-api.herokuapp.com/api/v1/addproduct',
+          `${this.url}/addproduct`,
           data
         )
 
@@ -206,13 +209,13 @@ export default {
         await this.fetchData()
       })
     },
-    async onDelete(id, index) {
+    async onDelete(id, index,name) {
       this.$swal
         .fire({
           title: 'ลบสินค้า',
           showCancelButton: true,
           cancelButtonText: 'ยกเลิก',
-          text: `คุณต้องการลบสินค้า ${id} หรือไม่`,
+          text: `คุณต้องการลบสินค้า ${name} หรือไม่`,
           type: 'warning',
           confirmButtonText: 'ลบ',
           confirmButtonColor: 'rgb(239, 68, 68)',
@@ -224,7 +227,7 @@ export default {
               store: this.store,
             }
             const res = await axios.put(
-              `https://test-eshop-api.herokuapp.com/api/v1/products/delete/${id}`,
+              `${this.url}/products/delete/${id}`,
               body
             )
           } else {
@@ -232,6 +235,9 @@ export default {
           }
         })
     },
+  },
+  computed: {
+    ...mapState(['url']),
   },
 }
 </script>

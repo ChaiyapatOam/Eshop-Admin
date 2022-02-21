@@ -25,7 +25,7 @@
             <td class="stock">{{ store.phone }}</td>
             <td>
               <label class="switch">
-                <!-- active == true -> ร้านเปิดอยู่ -->
+                <!-- active == true  ร้านเปิดอยู่ -->
                 <input
                   type="checkbox"
                   @click="Active(store.store)"
@@ -33,7 +33,7 @@
                   checked
                 />
 
-                <!-- active == false -> ร้านปิดอยู่ -->
+                <!-- active == false  ร้านปิดอยู่ -->
                 <input type="checkbox" @click="InActive(store.store)" v-else />
                 <span class="slider round"></span>
               </label>
@@ -74,6 +74,7 @@ import Sidebar from '../components/Sidebar.vue'
 import Layout from '../components/Layout.vue'
 
 import { Jwt, StoreAuth } from '../libs/sessionStorage'
+import { mapState } from 'vuex'
 import axios from 'axios'
 
 import '../styles/layout.css'
@@ -95,12 +96,13 @@ export default {
   async mounted() {
     try {
       await this.fetchData()
-    } catch (err) {}
+    } catch (err) {
+      console.log(err)
+    }
   },
   methods: {
     async fetchData() {
-      const url = 'https://test-eshop-api.herokuapp.com/api/v1'
-      const { data } = await axios.get(`${url}/store`, {
+      const { data } = await axios.get(`${this.url}/store`, {
         headers: {
           'Content-Type': 'Application/JSON',
         },
@@ -114,22 +116,19 @@ export default {
       const body = {
         active: false,
       }
-      await axios.put(
-        `https://test-eshop-api.herokuapp.com/api/v1/store/${store}`,
-        body
-      )
+      await axios.put(`${this.url}/store/${store}`, body)
       await this.fetchData()
     },
     async InActive(store) {
       const body = {
         active: true,
       }
-      await axios.put(
-        `https://test-eshop-api.herokuapp.com/api/v1/store/${store}`,
-        body
-      )
+      await axios.put(`${this.url}/store/${store}`, body)
       await this.fetchData()
     },
+  },
+  computed: {
+    ...mapState(['url']),
   },
 }
 </script>

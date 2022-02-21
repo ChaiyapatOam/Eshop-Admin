@@ -63,6 +63,7 @@ import Sidebar from '../components/Sidebar.vue'
 import Layout from '../components/Layout.vue'
 
 import { Jwt, StoreAuth } from '../libs/sessionStorage'
+import {mapState} from 'vuex'
 import axios from 'axios'
 import moment from 'moment'
 
@@ -87,7 +88,6 @@ export default {
     const storeAuth = StoreAuth.getStoreAuth()
     this.store = storeAuth.store
     // console.log(this.store)
-
     try {
       await this.fetchData()
     } catch (err) {}
@@ -95,7 +95,7 @@ export default {
   methods: {
     async fetchData() {
       const { data } = await axios.get(
-        `https://test-eshop-api.herokuapp.com/api/v1/orders/${this.store}`,
+        `${this.url}/orders/${this.store}`,
         {
           headers: {
             'Content-Type': 'Application/JSON',
@@ -112,6 +112,9 @@ export default {
       return moment(date).format("DD/MM/YYYY HH:mm")
     }
   },
+  computed: {
+    ...mapState(["url"]),
+  }
 }
 </script>
 

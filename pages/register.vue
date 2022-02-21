@@ -6,7 +6,6 @@
           <div>
             <h2 class="text-center">สร้างร้านค้าของคุณ</h2>
             <form @submit.prevent="handleSubmit">
-
               <div class="form-group">
                 <label for="store">ชื่อร้าน</label>
                 <input
@@ -133,9 +132,10 @@
                 </div>
               </div>
               <div class="form-group text-center">
-                <h5>มีร้านค้าแล้ว? 
+                <h5>
+                  มีร้านค้าแล้ว?
                   <nuxt-link to="/login">เข้าสู่ระบบเลย</nuxt-link>
-                  </h5>
+                </h5>
               </div>
               <!-- button  -->
               <div class="form-group text-center">
@@ -153,11 +153,12 @@
 
 <script>
 import axios from 'axios'
-import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
+import { mapState } from 'vuex'
+import { required, email, minLength,maxLength, sameAs } from 'vuelidate/lib/validators'
 
 export default {
   name: 'app',
-    head() {
+  head() {
     return {
       title: 'สร้างร้านค้า',
       meta: [
@@ -190,7 +191,7 @@ export default {
       store: { required },
       address: { required },
       email: { required, email },
-      phone: { required, minLength: minLength(10) },
+      phone: { required, minLength: minLength(10), maxLength:maxLength(10) },
       password: { required, minLength: minLength(6) },
       confirmPassword: { required, sameAsPassword: sameAs('password') },
     },
@@ -198,6 +199,11 @@ export default {
   methods: {
     async handleSubmit(e) {
       this.submitted = true
+
+      this.$v.$touch()
+      if (this.$v.$invalid) {
+        return
+      }
       const body = {
         store: this.user.store,
         email: this.user.email,
@@ -205,19 +211,15 @@ export default {
         phone: this.user.phone,
         address: this.user.address,
       }
-      const res = await axios.post(
-        'https://test-eshop-api.herokuapp.com/api/v1/store',
-        body
-      )
+      const res = await axios.post(`${this.url}/store`, body)
       // console.log(res)
-      if(res.status == 200) {
+      if (res.status == 200) {
         this.$router.push('/login')
       }
-      this.$v.$touch()
-      if (this.$v.$invalid) {
-        return
-      }
     },
+  },
+  computed: {
+    ...mapState(['url']),
   },
 }
 </script>

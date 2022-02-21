@@ -27,6 +27,7 @@
 import Sidebar from '../components/Sidebar.vue'
 import Layout from '../components/Layout.vue'
 import { Jwt, StoreAuth } from '../libs/sessionStorage'
+import {mapState} from 'vuex'
 import axios from 'axios'
 
 import '../styles/layout.css'
@@ -46,14 +47,20 @@ export default {
     }
   },
   async mounted() {
+    const storeAuth = StoreAuth.getStoreAuth()
+    this.store = storeAuth.store
+
     try {
+      if (this.store == null) this.$router.push('/login')
       await this.fetchData()
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   },
   methods: {
     async fetchData() {
       const { data } = await axios.get(
-        `https://test-eshop-api.herokuapp.com/api/v1/users`,
+        `${this.url}/users/${this.store}`,
         {
           headers: {
             'Content-Type': 'Application/JSON',
@@ -61,9 +68,12 @@ export default {
         }
       )
 
-      //   console.log(data)
+        console.log(data)
       this.users = data
     },
+  },
+    computed: {
+    ...mapState(['url']),
   },
 }
 </script>

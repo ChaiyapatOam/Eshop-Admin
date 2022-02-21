@@ -60,6 +60,7 @@
 <script>
 import axios from 'axios'
 import { Jwt, StoreAuth } from '../libs/sessionStorage'
+import { mapState } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 export default {
   head() {
@@ -92,8 +93,7 @@ export default {
     async handleSubmit() {
       this.submitted = true
       try {
-        const url = 'https://test-eshop-api.herokuapp.com/api/v1'
-        const res = await this.$axios.post(url + '/store/admin/login', {
+        const res = await this.$axios.post(`${this.url}/store/admin/login`, {
           email: this.email,
           password: this.password,
         })
@@ -129,6 +129,9 @@ export default {
         return
       }
     },
+  },
+  computed: {
+    ...mapState(['url']),
   },
 }
 </script>

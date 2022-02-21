@@ -16,18 +16,17 @@
         </div>
         <ul class="nav-links">
           <!-- v-for -->
-          <li v-for="(p,index) in pages" :key="index">
+          <li v-for="(p, index) in pages" :key="index">
             <nuxt-link :to="p.path">
               <i :class="`bx bx-${p.icon}`"></i>
               <h1 class="links_name" v-if="handleResize">{{ p.name }}</h1>
             </nuxt-link>
           </li>
+          <!-- Logout -->
           <li class="log_out" @click="logout">
             <a>
               <i class="bx bx-log-out"></i>
-              <span class="links_name"  v-if="handleResize"
-                >Log out</span
-              >
+              <span class="links_name" v-if="handleResize">Log out</span>
             </a>
           </li>
         </ul>
@@ -38,6 +37,7 @@
 
 <script>
 import { Jwt, StoreAuth } from '../libs/sessionStorage'
+import { mapState } from 'vuex'
 import axios from 'axios'
 export default {
   name: 'Sidebar',
@@ -58,8 +58,7 @@ export default {
   },
   methods: {
     async fetchData() {
-      const url = "https://test-eshop-api.herokuapp.com/api/v1"
-      const { data } = await axios.get(`${url}/pages`, {
+      const { data } = await axios.get(`${this.url}/pages`, {
         headers: {
           'Content-Type': 'Application/JSON',
         },
@@ -75,6 +74,9 @@ export default {
     handleResize() {
       return this.screenWidth < 768 ? false : true
     },
+  },
+  computed: {
+    ...mapState(['url']),
   },
 }
 </script>
