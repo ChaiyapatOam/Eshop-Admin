@@ -1,120 +1,137 @@
 <template>
-  <div class="root">
-    <div class="title">ระบบจัดการหลังร้าน</div>
+  <div class="jumbotron">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-8 offset-sm-2">
+          <div>
+            <h2 class="text-center">เข้าสู่ระบบร้านค้า</h2>
+            <form @submit.prevent="handleSubmit">
+              <!-- อีเมล -->
+              <div class="form-group">
+                <label for="email">อีเมล</label>
+                <input
+                  type="email"
+                  v-model="email"
+                  id="email"
+                  name="email"
+                  class="form-control"
+                  :class="{ 'is-invalid': submitted && $v.email.$error }"
+                />
+                <div
+                  v-if="submitted && $v.email.$error"
+                  class="invalid-feedback"
+                >
+                  <span v-if="!$v.email.required">โปรดใส่อีเมล</span>
+                </div>
+              </div>
 
-    <div>
-      <form @submit.prevent="login" class="form-container">
-        <input
-          type= "email"
-          placeholder="อีเมล"
-          required
-          v-model="email"
-        />
-        <input
-          type="password"
-          placeholder="รหัสผ่าน"
-          required
-          v-model="password"
-        />
-
-        <button type="submit" class="btn-login">เข้าสู่ระบบ</button>
-        <router-link to="/register">
-          <button class="btn-signup">สมัครสมาชิก</button>
-        </router-link>
-      </form>
+              <!-- password  -->
+              <div class="form-group">
+                <label for="password">รหัสผ่าน</label>
+                <input
+                  type="password"
+                  v-model="password"
+                  id="password"
+                  name="password"
+                  class="form-control"
+                  :class="{
+                    'is-invalid': submitted && $v.password.$error,
+                  }"
+                />
+                <div
+                  v-if="submitted && $v.password.$error"
+                  class="invalid-feedback"
+                >
+                  <span v-if="!$v.password.required">โปรดใส่รหัสผ่าน</span>
+                </div>
+              </div>
+              <!-- button  -->
+              <div class="form-group text-center">
+                <button class="btn btn-primary text-center">เข้าสู่ระบบ</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
 import { Jwt, StoreAuth } from '../../libs/sessionStorage'
-
+import { mapState } from 'vuex'
+import { required } from 'vuelidate/lib/validators'
 export default {
+  head() {
+    return {
+      title: 'เข้าสู่ระบบ',
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        {
+          hid: 'login',
+          name: 'login',
+          content: 'เข้าสู่ระบบหลังร้าน',
+        },
+      ],
+      link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    }
+  },
   data() {
     return {
       email: '',
       password: '',
+      submitted: false,
     }
   },
+  validations: {
+    email: { required },
+    password: { required },
+  },
   methods: {
-    async login() {
-      if (!this.email && !this.password) return
-
+    async handleSubmit() {
+      this.submitted = true
       try {
-        const { data } = await this.$axios.post(
-          'http://localhost:3000/api/v1/store/admin/login',
-          {
-            email: this.email,
-            password: this.password,
-          }
-        )
+        const res = await this.$axios.post(`${this.url}/store/admin/login`, {
+          email: this.email,
+          password: this.password,
+        })
 
-        // console.log(data)
-
-        if (data) {
-          this.$router.push('/admin/dashboard')
-          Jwt.setJwtToken(data.token)
-          StoreAuth.setStoreAuth(data.data)
+        console.log(res)
+        console.log(res.data)
+        if (!res) {
+          console.log('error')
+        }
+        if (res.status == 200) {
+          this.$swal
+            .fire({
+              type: 'success',
+              title: 'สำเร็จ',
+              timer: 1000,
+              showConfirmButton: false,
+            })
+            .then(this.$router.push('/dashboard'))
+          Jwt.setJwtToken(res.data.token)
+          StoreAuth.setStoreAuth(res.data.data)
         }
       } catch (err) {
         console.error(err)
+        this.$swal.fire({
+          type: 'error',
+          title: 'ชื่อหรือรหัสผ่านไม่ถูกต้อง',
+          timer: 1500,
+          showConfirmButton: false,
+        })
+      }
+      this.$v.$touch()
+      if (this.$v.$invalid) {
+        return
       }
     },
   },
+  computed: {
+    ...mapState(['url']),
+  },
 }
 </script>
-
-<style scoped>
-.root {
-  min-height: 100vh;
-  padding: 20px;
-
-  gap: 20px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  @apply bg-gradient-to-b from-dodger-blue-500 to-dodger-blue-600;
-}
-
-.title {
-  @apply text-white font-bold text-2xl drop-shadow-md;
-}
-
-.form-container {
-  width: auto;
-  height: auto;
-  padding: 20px;
-
-  gap: 12px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  @apply bg-white rounded shadow-lg;
-}
-
-.form-container input {
-  @apply border-2 border-dodger-blue-500 px-3 py-2 rounded;
-}
-
-.form-container .btn-login {
-  width: 100%;
-  height: 100%;
-
-  @apply transition-all bg-dodger-blue-500 px-3 py-1 rounded text-white font-medium;
-  @apply hover:bg-dodger-blue-700;
-}
-
-.form-container .btn-signup {
-  width: 100%;
-  height: 100%;
-
-  @apply transition-all bg-transparent px-2 py-1 rounded text-black text-sm font-normal;
-  @apply text-center hover:underline;
-}
-</style>

@@ -11,6 +11,7 @@
             <th scope="col">คำอธิบาย</th>
             <th scope="col">ราคา</th>
             <th scope="col">จำนวน</th>
+            <th scope="col">สถานะ</th>
             <th scope="col">แก้ไขข้อมูล</th>
           </tr>
         </thead>
@@ -24,13 +25,28 @@
             <td class="price">{{ product.description }}</td>
             <td class="price">{{ product.price }}</td>
             <td class="stock">{{ product.stock }}</td>
+            <td class="active">
+              <label class="switch">
+                <!-- active == true  -->
+                <input
+                  type="checkbox"
+                  @click="Active(product.id)"
+                  v-if="product.active == true"
+                  checked
+                />
+
+                <!-- active == false   -->
+                <input type="checkbox" @click="InActive(product.id)" v-else />
+                <span class="slider round"></span>
+              </label>
+            </td>
             <td class="edit">
               <!--   <button class="edit btn btn-warning">
                 <a :href="`/admin/product/${product._id}`"> แก้ไข</a>
               </button> -->
               <button
                 class="edit btn btn-outline-danger"
-                @click="onDelete(product._id, index,product.name)"
+                @click="onDelete(product._id, index, product.name)"
               >
                 ลบ
               </button>
@@ -47,7 +63,7 @@ import Sidebar from '../components/Sidebar.vue'
 import Layout from '../components/Layout.vue'
 
 import { Jwt, StoreAuth } from '../libs/sessionStorage'
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
 import axios from 'axios'
 
 import '../styles/layout.css'
@@ -76,19 +92,22 @@ export default {
       if (this.store == null) this.$router.push('/login')
       await this.fetchData()
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
   },
   methods: {
     async fetchData() {
-      const { data } = await axios.get(`${this.url}/store/admin/product/${this.store}`, {
-        headers: {
-          'Content-Type': 'Application/JSON',
-          // Authorization: `Bearer ${token}`,
-        },
-      })
+      const { data } = await axios.get(
+        `${this.url}/store/admin/product/${this.store}`,
+        {
+          headers: {
+            'Content-Type': 'Application/JSON',
+            // Authorization: `Bearer ${token}`,
+          },
+        }
+      )
 
-      // console.log(data[0].products)
+      console.log(data[0].products)
 
       this.products = data[0].products
     },
@@ -147,10 +166,7 @@ export default {
         data.append('stock', result.value.stock)
         data.append('image', result.value.image)
         data.append('store', result.value.store)
-        await axios.post(
-          `${this.url}/addproduct`,
-          data
-        )
+        await axios.post(`${this.url}/addproduct`, data)
 
         this.$swal.fire({
           type: 'success',
@@ -209,7 +225,7 @@ export default {
         await this.fetchData()
       })
     },
-    async onDelete(id, index,name) {
+    async onDelete(id, index, name) {
       this.$swal
         .fire({
           title: 'ลบสินค้า',
@@ -234,6 +250,20 @@ export default {
             console.log('error!!!!')
           }
         })
+    },
+    async Active(id) {
+      const body = {
+        active: false,
+      }
+      await axios.put(`${this.url}/products/${id}`, body)
+      await this.fetchData()
+    },
+    async InActive(id) {
+      const body = {
+        active: true,
+      }
+      await axios.put(`${this.url}/products/${id}`, body)
+      await this.fetchData()
     },
   },
   computed: {
@@ -337,5 +367,65 @@ table thead th {
 
 .swal2-label {
   text-align: left;
+}
+/* switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: '';
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #2196f3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }
 </style>
