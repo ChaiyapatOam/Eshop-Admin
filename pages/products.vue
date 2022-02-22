@@ -68,6 +68,7 @@ export default {
     }
   },
   async mounted() {
+    if (!Jwt.getJwtToken()) this.$router.push('/login')
     const storeAuth = StoreAuth.getStoreAuth()
     this.store = storeAuth.store
 
@@ -80,7 +81,6 @@ export default {
   },
   methods: {
     async fetchData() {
-      const url = 'https://test-eshop-api.herokuapp.com/api/v1'
       const { data } = await axios.get(`${this.url}/store/admin/product/${this.store}`, {
         headers: {
           'Content-Type': 'Application/JSON',
@@ -115,7 +115,7 @@ export default {
           if (!name) {
             this.$swal.showValidationMessage('โปรดกรอกชื่อสินค้า')
           }
-          if (!price || price > 10000) {
+          if (!price || price > 100000) {
             this.$swal.showValidationMessage('โปรดกรอกราคาสินค้า')
           }
           if (isNaN(price)) {

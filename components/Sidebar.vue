@@ -11,7 +11,7 @@
     <body>
       <div class="sidebar">
         <div class="logo-details">
-          <i class="bx bxl-c-plus-plus"></i>
+          <i class="bx bx-store"></i>
           <h1 class="logo_name" v-if="handleResize">Store</h1>
         </div>
         <ul class="nav-links">

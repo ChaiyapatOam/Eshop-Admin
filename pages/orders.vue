@@ -18,7 +18,7 @@
 
         <tbody>
           <tr v-for="(o, index) in orders" :key="index">
-            <td class="name" scope="row">{{ o.store }}</td>
+            <td class="name" scope="row">{{ o.user.name }}</td>
             <td class="price">{{ o.phone }}</td>
             <td class="price">{{ o.address }}</td>
 
@@ -39,16 +39,14 @@
 
             <td class="total">{{ o.total }}</td>
 
-            <td class="total">{{ moment(o.DateOrder)  }}</td>
-    
+            <td class="total">{{ moment(o.DateOrder) }}</td>
+
             <td class="status">
               <select name="" class="a-select-option">
                 <option>
                   {{ o.status }}
                 </option>
-                <option>
-                  purchase
-                </option>
+                <option>purchase</option>
               </select>
             </td>
           </tr>
@@ -63,7 +61,7 @@ import Sidebar from '../components/Sidebar.vue'
 import Layout from '../components/Layout.vue'
 
 import { Jwt, StoreAuth } from '../libs/sessionStorage'
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
 import axios from 'axios'
 import moment from 'moment'
 
@@ -87,34 +85,31 @@ export default {
   async mounted() {
     const storeAuth = StoreAuth.getStoreAuth()
     this.store = storeAuth.store
-    // console.log(this.store)
+    if (!Jwt.getJwtToken()) this.$router.push('/login')
     try {
       await this.fetchData()
     } catch (err) {}
   },
   methods: {
     async fetchData() {
-      const { data } = await axios.get(
-        `${this.url}/orders/${this.store}`,
-        {
-          headers: {
-            'Content-Type': 'Application/JSON',
-          },
-        }
-      )
+      const { data } = await axios.get(`${this.url}/orders/${this.store}`, {
+        headers: {
+          'Content-Type': 'Application/JSON',
+        },
+      })
       console.log(data)
       // console.log(data[0])
 
       this.orders = data
       console.log(orders)
     },
-    moment(date){
-      return moment(date).format("DD/MM/YYYY HH:mm")
-    }
+    moment(date) {
+      return moment(date).format('DD/MM/YYYY HH:mm')
+    },
   },
   computed: {
-    ...mapState(["url"]),
-  }
+    ...mapState(['url']),
+  },
 }
 </script>
 

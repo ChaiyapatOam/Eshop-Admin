@@ -208,6 +208,7 @@ export default {
     setInterval(() => {
       this.time = moment(Date()).format('dddd DD/MM/YYYY HH:mm:ss')
     }, 100)
+    if (!Jwt.getJwtToken()) this.$router.push('/login')
   },
 }
 </script>

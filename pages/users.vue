@@ -49,7 +49,7 @@ export default {
   async mounted() {
     const storeAuth = StoreAuth.getStoreAuth()
     this.store = storeAuth.store
-
+    if (!Jwt.getJwtToken()) this.$router.push('/login')
     try {
       if (this.store == null) this.$router.push('/login')
       await this.fetchData()
@@ -68,7 +68,7 @@ export default {
         }
       )
 
-        console.log(data)
+        // console.log(data)
       this.users = data
     },
   },

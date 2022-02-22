@@ -96,6 +96,7 @@ export default {
   async mounted() {
     try {
       await this.fetchData()
+      if (!Jwt.getJwtToken()) this.$router.push('/login')
     } catch (err) {
       console.log(err)
     }
