@@ -41,11 +41,15 @@
               </label>
             </td>
             <td class="edit">
-              <!--   <button class="edit btn btn-warning">
-                <a :href="`/admin/product/${product._id}`"> แก้ไข</a>
-              </button> -->
               <button
-                class="edit btn btn-outline-danger"
+                class=" btn btn-warning"
+                @click="onUpdateProduct(product.id)"
+              >
+                <!-- <a :href="`/admin/product/${product._id}`"> แก้ไข</a> -->
+                แก้ไข
+              </button>
+              <button
+                class=" btn btn-danger"
                 @click="onDelete(product._id, index, product.name)"
               >
                 ลบ
@@ -123,6 +127,7 @@ export default {
   <input type="file" accept="image/png, image/jpeg" id="image" class="swal2-input" >`,
         confirmButtonText: 'เพิ่ม',
         focusConfirm: false,
+        showCloseButton: true,
         preConfirm: () => {
           const name = this.$swal.getPopup().querySelector('#name').value
           const price = this.$swal.getPopup().querySelector('#price').value
@@ -178,52 +183,75 @@ export default {
       })
     },
     async onUpdateProduct(id) {
-      const product = await axios.get(
-        `https://test-eshop-api.herokuapp.com/api/v1/products/${id}`
-      )
-      // console.log(product)
-      this.$swal({
-        title: 'แก้ไขสินค้า',
-        confirmButtonText: 'แก้ไข',
-        focusConfirm: false,
-        preConfirm: () => {
-          const name = this.$swal.getPopup().querySelector('#name').value
-          const price = this.$swal.getPopup().querySelector('#price').value
-          const image = this.$swal.getPopup().querySelector('#image').files[0]
-          const stock = this.$swal.getPopup().querySelector('#stock').value
-          const description = this.$swal
-            .getPopup()
-            .querySelector('#description').value
-          return {
-            name,
-            description,
-            price,
-            stock,
-            image,
-            store: this.store,
+      try {
+        const { data } = await axios.get(`${this.url}/products/${id}`)
+        console.log(data)
+        this.$swal({
+          title: 'แก้ไขสินค้า',
+          html: ` 
+  <label class='swal2-label' style="text-align: left;">ชื่อสินค้า</label>
+  <input type="text" id="name" class="swal2-input" placeholder="ชื่อสินค้า" value="${data.name}">
+  <label class='swal2-label' style="text-align: left;">ราคา</label>
+  <input type="text" id="price"  class="swal2-input" placeholder="ราคา" value="${data.price}">
+  <label class='swal2-label' style="text-align: left;">คำอธิบาย</label>
+  <input type="text" id="description" class="swal2-input" placeholder="คำอธิบาย" value="${data.description}">
+  <label class='swal2-label' style="text-align: left;">สต็อค</label>
+  <input type="number" id="stock" class="swal2-input" placeholder="สต็อค" value="${data.stock}" >`,
+          cancelButtonText: "ยกเลิก",
+          confirmButtonText: 'แก้ไข',
+          showCancelButton:true,
+          focusConfirm: false,
+          reverseButtons: true,
+          showCloseButton: true,
+          preConfirm: () => {
+            const name = this.$swal.getPopup().querySelector('#name').value
+            const price = this.$swal.getPopup().querySelector('#price').value
+            const stock = this.$swal.getPopup().querySelector('#stock').value
+            const description = this.$swal
+              .getPopup()
+              .querySelector('#description').value
+            return {
+              name,
+              description,
+              price,
+              stock,
+              image,
+            }
+          },
+        }).then(async (result) => {
+          /*const data = new FormData()
+          data.append('name', result.value.name)
+          data.append('description', result.value.description)
+          data.append('price', result.value.price)
+          data.append('stock', result.value.stock)
+          data.append('image', result.value.image)
+          console.log(data); */
+          const body = {
+            name: result.value.name,
+            description: result.value.description,
+            price: result.value.price,
+            stock: result.value.stock,
           }
-        },
-      }).then(async (result) => {
-        const data = new FormData()
-        data.append('name', result.value.name)
-        data.append('description', result.value.description)
-        data.append('price', result.value.price)
-        data.append('stock', result.value.stock)
-        data.append('image', result.value.image)
-        data.append('store', result.value.store)
-        await axios.put(
-          'https://test-eshop-api.herokuapp.com/api/v1/products',
-          data
-        )
+          // console.log(body)
 
-        this.$swal.fire({
-          type: 'success',
-          title: 'เพิ่มสินค้าสำเร็จ',
-          text: `name:${result.value.name}`,
+          const res = await axios.put(`${this.url}/products/${id}`, body)
+          console.log(res)
+          this.$swal.fire({
+            type: 'success',
+            title: 'แก้ไขสำเร็จ',
+            // text: `name:${result.value.name}`,
+          })
+
+          await this.fetchData()
         })
-
-        await this.fetchData()
-      })
+      } catch (err) {
+        console.log(err)
+        this.$swal.fire({
+          type: 'error',
+          title: 'เกิดข้อผิดพลาด',
+          // text: `name:${result.value.name}`,
+        })
+      }
     },
     async onDelete(id, index, name) {
       this.$swal

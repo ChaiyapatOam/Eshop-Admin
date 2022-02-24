@@ -206,7 +206,7 @@ export default {
   },
   mounted() {
     setInterval(() => {
-      this.time = moment(Date()).locale('th').add(543,'year').format('dddd DD/MM/YYYY LLLL HH:mm:ss')
+      this.time = moment(Date()).locale('th').format('dddd DD/MM/YYYY  HH:mm:ss')
     }, 100)
     if (!Jwt.getJwtToken()) this.$router.push('/login')
   },

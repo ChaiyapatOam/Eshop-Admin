@@ -133,5 +133,8 @@ export default {
   computed: {
     ...mapState(['url']),
   },
+  mounted() {
+    if (Jwt.getJwtToken()) this.$router.push('/dashboard')
+  },
 }
 </script>
