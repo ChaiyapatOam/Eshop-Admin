@@ -215,7 +215,6 @@ export default {
               description,
               price,
               stock,
-              image,
             }
           },
         }).then(async (result) => {
@@ -239,7 +238,6 @@ export default {
           this.$swal.fire({
             type: 'success',
             title: 'แก้ไขสำเร็จ',
-            // text: `name:${result.value.name}`,
           })
 
           await this.fetchData()
