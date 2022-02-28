@@ -50,7 +50,7 @@
               </button>
               <button
                 class=" btn btn-danger"
-                @click="onDelete(product._id, index, product.name)"
+                @click="onDelete(product._id, index,product.image, product.name)"
               >
                 ลบ
               </button>
@@ -185,17 +185,12 @@ export default {
     async onUpdateProduct(id) {
       try {
         const { data } = await axios.get(`${this.url}/products/${id}`)
-        console.log(data)
         this.$swal({
           title: 'แก้ไขสินค้า',
           html: ` 
-  <label class='swal2-label' style="text-align: left;">ชื่อสินค้า</label>
   <input type="text" id="name" class="swal2-input" placeholder="ชื่อสินค้า" value="${data.name}">
-  <label class='swal2-label' style="text-align: left;">ราคา</label>
   <input type="text" id="price"  class="swal2-input" placeholder="ราคา" value="${data.price}">
-  <label class='swal2-label' style="text-align: left;">คำอธิบาย</label>
   <input type="text" id="description" class="swal2-input" placeholder="คำอธิบาย" value="${data.description}">
-  <label class='swal2-label' style="text-align: left;">สต็อค</label>
   <input type="number" id="stock" class="swal2-input" placeholder="สต็อค" value="${data.stock}" >`,
           cancelButtonText: "ยกเลิก",
           confirmButtonText: 'แก้ไข',
@@ -234,7 +229,7 @@ export default {
           // console.log(body)
 
           const res = await axios.put(`${this.url}/products/${id}`, body)
-          console.log(res)
+          // console.log(res)
           this.$swal.fire({
             type: 'success',
             title: 'แก้ไขสำเร็จ',
@@ -251,14 +246,13 @@ export default {
         })
       }
     },
-    async onDelete(id, index, name) {
+    async onDelete(id, index,img, name) {
       this.$swal
         .fire({
-          title: 'ลบสินค้า',
+          imageUrl: img,
           showCancelButton: true,
           cancelButtonText: 'ยกเลิก',
           text: `คุณต้องการลบสินค้า ${name} หรือไม่`,
-          type: 'warning',
           confirmButtonText: 'ลบ',
           confirmButtonColor: 'rgb(239, 68, 68)',
         })
@@ -299,6 +293,13 @@ export default {
 </script>
 
 <style scoped>
+h2 .swal2-title {
+  margin: 0px;
+  font-size: 25px;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.21);
+  margin-bottom: 28px;
+  color: red;
+}
 /* .root {
   min-height: 100vh;
 

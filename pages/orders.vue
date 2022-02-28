@@ -17,7 +17,7 @@
         </thead>
 
         <tbody>
-          <tr v-for="(o, index) in orders" :key="index" >
+          <tr v-for="(o, index) in orders" :key="index">
             <td class="name" scope="row">{{ o.user.name }}</td>
             <td class="price">{{ o.phone }}</td>
             <td class="price">{{ o.address }}</td>
@@ -30,7 +30,7 @@
                   v-for="(item, index) in JSON.parse(o.cart)"
                   :key="index"
                 >
-                  {{ item.product.name }} <br>
+                  {{ item.product.name }} <br />
                   {{ item.product.price }}
                   {{ 'X' + item.quantity }} ชิ้น
                 </li>
@@ -42,12 +42,7 @@
             <td class="total">{{ moment(o.DateOrder) }}</td>
 
             <td class="status">
-              <select name="" class="a-select-option">
-                <option>
-                  {{ o.status }}
-                </option>
-                <option>purchase</option>
-              </select>
+              {{ o.status }}
             </td>
           </tr>
         </tbody>
