@@ -4,11 +4,12 @@
       <div class="row">
         <div class="col-sm-8 offset-sm-2">
           <div>
-            <h2 class="text-center">เข้าสู่ระบบร้านค้า</h2>
+            <h2 class="text-center">ลืมรหัสผ่าน</h2>
+            <h4 class="text-center">ใส่ที่อยู่อีเมลของคุณ</h4>
             <form @submit.prevent="handleSubmit">
               <!-- อีเมล -->
               <div class="form-group">
-                <label for="email">อีเมล</label>
+                <label for="email"></label>
                 <input
                   type="email"
                   v-model="email"
@@ -25,31 +26,12 @@
                 </div>
               </div>
 
-              <!-- password  -->
-              <div class="form-group">
-                <label for="password">รหัสผ่าน</label>
-                <input
-                  type="password"
-                  v-model="password"
-                  id="password"
-                  name="password"
-                  class="form-control"
-                  :class="{
-                    'is-invalid': submitted && $v.password.$error,
-                  }"
-                />
-                <div
-                  v-if="submitted && $v.password.$error"
-                  class="invalid-feedback"
-                >
-                  <span v-if="!$v.password.required">โปรดใส่รหัสผ่าน</span>
-                </div>
-              </div>
+
               <!-- button  -->
               <div class="form-group text-center">
                 <button class="btn btn-primary text-center">เข้าสู่ระบบ</button>
               </div>
-              <p class="text-center"> <nuxt-link to="/forget">ลืมรหัสผ่าน?</nuxt-link></p>
+              <p class="text-center"> <nuxt-link to="/">ลืมรหัสผ่าน?</nuxt-link></p>
             </form>
           </div>
         </div>
@@ -66,14 +48,14 @@ import { required } from 'vuelidate/lib/validators'
 export default {
   head() {
     return {
-      title: 'เข้าสู่ระบบ',
+      title: 'ลืมรหัสผ่าน',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         {
-          hid: 'login',
-          name: 'login',
-          content: 'เข้าสู่ระบบหลังร้าน',
+          hid: 'forget-password',
+          name: 'forget-password',
+          content: 'ลืมรหัสผ่าน',
         },
       ],
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
@@ -82,13 +64,11 @@ export default {
   data() {
     return {
       email: '',
-      password: '',
       submitted: false,
     }
   },
   validations: {
     email: { required },
-    password: { required },
   },
   methods: {
     async handleSubmit() {
@@ -96,7 +76,6 @@ export default {
       try {
         const res = await this.$axios.post(`${this.url}/store/admin/login`, {
           email: this.email,
-          password: this.password,
         })
 
         console.log(res)
@@ -120,7 +99,7 @@ export default {
         console.error(err)
         this.$swal.fire({
           type: 'error',
-          title: 'ชื่อหรือรหัสผ่านไม่ถูกต้อง',
+          title: 'ไม่พบที่อยู่อีเมล',
           timer: 1500,
           showConfirmButton: false,
         })

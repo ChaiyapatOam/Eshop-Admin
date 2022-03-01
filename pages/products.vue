@@ -1,6 +1,9 @@
 <template>
   <Layout>
-    <h1>สินค้าในร้าน</h1>
+    <div class="row">
+      <h1>สินค้าในร้าน</h1>
+    </div>
+    
     <button class="btn btn-success" @click="onAddProduct">เพิ่มสินค้า</button>
     <main>
       <table class="table" v-if="products">
@@ -119,12 +122,15 @@ export default {
       this.$swal({
         title: 'เพิ่มสินค้า',
         html: ` 
-  <label class='swal2-label' style="text-align: left;">ชื่อสินค้า</label>
-  <input type="text" id="name" class="swal2-input" placeholder="ชื่อสินค้า">
-  <input type="text" id="price"  class="swal2-input" placeholder="ราคา" required>
-  <input type="text" id="description" class="swal2-input" placeholder="คำอธิบาย">
-  <input type="number" id="stock" class="swal2-input" placeholder="สต็อค" >
-  <input type="file" accept="image/png, image/jpeg" id="image" class="swal2-input" >`,
+  <label class='swal2-label' style="width: 80px;">ชื่อสินค้า</label>
+  <input type="text" id="name" class="swal2-input" style='width: 200px;' placeholder="ชื่อสินค้า"> <br>
+  <label class='swal2-label' style="width: 80px;">ราคา</label>
+  <input type="text" id="price"  class="swal2-input" style='width: 200px;' placeholder="ราคา"> <br>
+  <label class='swal2-label' style="width: 80px;">คำอธิบาย</label>
+  <input type="text" id="description" class="swal2-input" style='width: 200px;' placeholder="คำอธิบาย"> <br>
+  <label class='swal2-label' style="width: 80px;">สต็อค</label>
+  <input type="number" id="stock" class="swal2-input" style='width: 200px;' placeholder="สต็อค" >
+  <input type="file" accept="image/png, image/jpeg" id="image" style='width: 300px;' class="swal2-input" >`,
         confirmButtonText: 'เพิ่ม',
         focusConfirm: false,
         showCloseButton: true,
@@ -188,10 +194,14 @@ export default {
         this.$swal({
           title: 'แก้ไขสินค้า',
           html: ` 
-  <input type="text" id="name" class="swal2-input" placeholder="ชื่อสินค้า" value="${data.name}">
-  <input type="text" id="price"  class="swal2-input" placeholder="ราคา" value="${data.price}">
-  <input type="text" id="description" class="swal2-input" placeholder="คำอธิบาย" value="${data.description}">
-  <input type="number" id="stock" class="swal2-input" placeholder="สต็อค" value="${data.stock}" >`,
+  <label class='swal2-label' style="width: 80px;">ชื่อสินค้า</label>
+  <input type="text" id="name" class="swal2-input" style='width: 200px;' placeholder="ชื่อสินค้า" value="${data.name}"> <br>
+  <label class='swal2-label' style="width: 80px;">ราคา</label>
+  <input type="text" id="price"  class="swal2-input" style='width: 200px;' placeholder="ราคา" value="${data.price}"> <br>
+  <label class='swal2-label' style="width: 80px;">คำอธิบาย</label>
+  <input type="text" id="description" class="swal2-input" style='width: 200px;' placeholder="คำอธิบาย" value="${data.description}"><br>
+  <label class='swal2-label' style="width: 80px;">สต็อค</label>
+  <input type="number" id="stock" class="swal2-input" style='width: 200px;' placeholder="สต็อค" value="${data.stock}" >`,
           cancelButtonText: "ยกเลิก",
           confirmButtonText: 'แก้ไข',
           showCancelButton:true,

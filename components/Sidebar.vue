@@ -22,6 +22,14 @@
               <h1 class="links_name" v-if="handleResize">{{ p.name }}</h1>
             </nuxt-link>
           </li>
+
+          <li>
+            <a :href="`https://nuxt-eshop-shop.netlify.app/${this.store}`" target="_blank">
+              <i class="bx bx-link-external"></i>
+              <h1 class="links_name" v-if="handleResize">ไปที่หน้าร้าน</h1>
+            </a>
+          </li>
+
           <!-- Logout -->
           <li class="log_out" @click="logout">
             <a>
@@ -44,12 +52,15 @@ export default {
   data: () => ({
     screenWidth: 0,
     pages: [],
+    store: null,
   }),
   mounted() {
     window.addEventListener('resize', () => {
       this.screenWidth = window.innerWidth
     })
     this.fetchData()
+    const storeAuth = StoreAuth.getStoreAuth()
+    this.store = storeAuth.store
   },
   destroyed() {
     window.removeEventListener('resize', () => {

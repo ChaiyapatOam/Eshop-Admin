@@ -2,7 +2,7 @@
   <Layout>
     <h1>รายการสั่งซื้อ</h1>
     <main>
-      <table class="table">
+      <table class="table" v-if="orders">
         <thead>
           <tr>
             <th scope="col">ชื่อ</th>
@@ -16,7 +16,7 @@
           </tr>
         </thead>
 
-        <tbody>
+        <tbody v-if="orders">
           <tr v-for="(o, index) in orders" :key="index">
             <td class="name" scope="row">{{ o.user.name }}</td>
             <td class="price">{{ o.phone }}</td>
@@ -39,10 +39,20 @@
 
             <td class="total">{{ o.total }}</td>
 
-            <td class="total">{{ moment(o.DateOrder) }}</td>
+            <td class="date">{{ moment(o.DateOrder) }}</td>
 
-            <td class="status">
-              {{ o.status }}
+            <td class="status" v-if="o.status == 'success'">สำเร็จ</td>
+            <td class="status" v-if="o.status == 'cancel'">ยกเลิกแล้ว</td>
+            <td class="status" v-if="o.status != 'success' && o.status != 'cancel'">{{ o.status }}</td>
+            
+            <td class="row" v-if="o.status != 'success' && o.status != 'cancel'">
+              <button class="btn btn-success" @click="Success(o._id)">
+                ส่งแล้ว
+              </button>
+              &nbsp;
+              <button class="btn btn-danger" @click="Cancel(o._id)">
+                ยกเลิก
+              </button>
             </td>
           </tr>
         </tbody>
@@ -96,7 +106,16 @@ export default {
       // console.log(data[0])
 
       this.orders = data
-      console.log(orders)
+    },
+    async Success(id) {
+      const body = { status: 'success' }
+      await axios.put(`${this.url}/orders/${id}`, body)
+      await this.fetchData()
+    },
+    async Cancel(id) {
+      const body = { status: 'cancel' }
+      await axios.put(`${this.url}/orders/${id}`, body)
+      await this.fetchData()
     },
     moment(date) {
       return moment(date).format('DD/MM/YYYY HH:mm')
