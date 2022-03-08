@@ -4,27 +4,9 @@
       <div class="row">
         <div class="col-sm-8 offset-sm-2">
           <div>
-            <h2 class="text-center">เข้าสู่ระบบร้านค้า</h2>
+            <h2 class="text-center">กรอกรหัสผ่าน</h2>
+            <h4 class="text-center">ใส่ที่รหัสผ่านใหม่ของคุณ</h4>
             <form @submit.prevent="handleSubmit">
-              <!-- อีเมล -->
-              <div class="form-group">
-                <label for="email">อีเมล</label>
-                <input
-                  type="email"
-                  v-model="email"
-                  id="email"
-                  name="email"
-                  class="form-control"
-                  :class="{ 'is-invalid': submitted && $v.email.$error }"
-                />
-                <div
-                  v-if="submitted && $v.email.$error"
-                  class="invalid-feedback"
-                >
-                  <span v-if="!$v.email.required">โปรดใส่อีเมล</span>
-                </div>
-              </div>
-
               <!-- password  -->
               <div class="form-group">
                 <label for="password">รหัสผ่าน</label>
@@ -43,11 +25,41 @@
                   class="invalid-feedback"
                 >
                   <span v-if="!$v.password.required">โปรดใส่รหัสผ่าน</span>
+                  <span v-if="!$v.password.minLength"
+                    >รหัสผ่านต้องทีอย่างน้อย 6 ตัว</span
+                  >
                 </div>
               </div>
+
+              <!-- Confirm password  -->
+              <div class="form-group">
+                <label for="confirmPassword">รหัสผ่านอีกครั้ง</label>
+                <input
+                  type="password"
+                  v-model="confirmPassword"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  class="form-control"
+                  :class="{
+                    'is-invalid': submitted && $v.confirmPassword.$error,
+                  }"
+                />
+                <div
+                  v-if="submitted && $v.confirmPassword.$error"
+                  class="invalid-feedback"
+                >
+                  <span v-if="!$v.confirmPassword.required"
+                    >โปรดใส่รหัสผ่านอีกครั้ง</span
+                  >
+                  <span v-else-if="!$v.confirmPassword.sameAsPassword"
+                    >รหัสผ่านไม่ตรงกัน</span
+                  >
+                </div>
+              </div>
+
               <!-- button  -->
               <div class="form-group text-center">
-                <button class="btn btn-primary text-center">เข้าสู่ระบบ</button>
+                <button class="btn btn-primary text-center">ยืนยัน</button>
               </div>
             </form>
           </div>
@@ -61,18 +73,18 @@
 import axios from 'axios'
 import { Jwt, StoreAuth } from '../../libs/sessionStorage'
 import { mapState } from 'vuex'
-import { required } from 'vuelidate/lib/validators'
+import { required, minLength,maxLength, sameAs } from 'vuelidate/lib/validators'
 export default {
   head() {
     return {
-      title: 'เข้าสู่ระบบ',
+      title: 'รหัสผ่านใหม่',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         {
-          hid: 'login',
-          name: 'login',
-          content: 'เข้าสู่ระบบหลังร้าน',
+          hid: 'forget-password',
+          name: 'forget-password',
+          content: 'ใส่รหัสผ่าน',
         },
       ],
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
@@ -80,14 +92,14 @@ export default {
   },
   data() {
     return {
-      email: '',
       password: '',
+      confirmPassword: '',
       submitted: false,
     }
   },
   validations: {
-    email: { required },
-    password: { required },
+    password: { required, minLength: minLength(6) },
+    confirmPassword: { required, sameAsPassword: sameAs('password') },
   },
   methods: {
     async handleSubmit() {
@@ -95,7 +107,6 @@ export default {
       try {
         const res = await this.$axios.post(`${this.url}/store/admin/login`, {
           email: this.email,
-          password: this.password,
         })
 
         console.log(res)
@@ -111,15 +122,15 @@ export default {
               timer: 1000,
               showConfirmButton: false,
             })
-            .then(this.$router.push('/admin/store'))
+            .then(this.$router.push('/login'))
           Jwt.setJwtToken(res.data.token)
           StoreAuth.setStoreAuth(res.data.data)
         }
       } catch (err) {
-        console.error(err)
+        // console.error(err)
         this.$swal.fire({
           type: 'error',
-          title: 'ชื่อหรือรหัสผ่านไม่ถูกต้อง',
+          title: 'เกิดผิดพลาด',
           timer: 1500,
           showConfirmButton: false,
         })
@@ -132,6 +143,9 @@ export default {
   },
   computed: {
     ...mapState(['url']),
+  },
+  mounted() {
+    if (Jwt.getJwtToken()) this.$router.push('/dashboard')
   },
 }
 </script>

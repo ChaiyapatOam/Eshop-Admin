@@ -112,7 +112,7 @@ export default {
               timer: 1000,
               showConfirmButton: false,
             })
-            .then(this.$router.push('/dashboard'))
+            .then(this.$router.push('/products'))
           Jwt.setJwtToken(res.data.token)
           StoreAuth.setStoreAuth(res.data.data)
         }

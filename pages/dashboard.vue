@@ -5,7 +5,7 @@
       <h1>Dashboard</h1>
       <h2>{{ time }}</h2>
       <div class="row">
-        <!-- Earnings (Monthly) Card Example -->
+        <!-- ยอดขายวันนี้ Card Example -->
         <div class="col-xl-3 col-md-6 mb-4">
           <div class="card border-left-primary shadow h-100 py-2">
             <div class="card-body">
@@ -14,10 +14,10 @@
                   <div
                     class="text-xs font-weight-bold text-primary text-uppercase mb-1"
                   >
-                    Earnings (Monthly)
+                    ยอดขายวันนี้
                   </div>
                   <div class="h5 mb-0 font-weight-bold text-gray-800">
-                    $40,000
+                    {{ total }} บาท
                   </div>
                 </div>
                 <div class="col-auto">
@@ -28,7 +28,7 @@
           </div>
         </div>
 
-        <!-- Earnings (Monthly) Card Example -->
+        <!-- ยอดขายเดือนนี้ Card Example -->
         <div class="col-xl-3 col-md-6 mb-4">
           <div class="card border-left-success shadow h-100 py-2">
             <div class="card-body">
@@ -37,10 +37,10 @@
                   <div
                     class="text-xs font-weight-bold text-success text-uppercase mb-1"
                   >
-                    Earnings (Annual)
+                    ยอดขายเดือนนี้
                   </div>
                   <div class="h5 mb-0 font-weight-bold text-gray-800">
-                    $215,000
+                    {{ month_total }} บาท
                   </div>
                 </div>
                 <div class="col-auto">
@@ -51,7 +51,7 @@
           </div>
         </div>
 
-        <!-- Earnings (Monthly) Card Example -->
+        <!-- รายการวันนี้ Card Example -->
         <div class="col-xl-3 col-md-6 mb-4">
           <div class="card border-left-info shadow h-100 py-2">
             <div class="card-body">
@@ -60,24 +60,12 @@
                   <div
                     class="text-xs font-weight-bold text-info text-uppercase mb-1"
                   >
-                    Tasks
+                    รายการวันนี้
                   </div>
                   <div class="row no-gutters align-items-center">
                     <div class="col-auto">
                       <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">
-                        50%
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class="progress progress-sm mr-2">
-                        <div
-                          class="progress-bar bg-info"
-                          role="progressbar"
-                          style="width: 50%"
-                          aria-valuenow="50"
-                          aria-valuemin="0"
-                          aria-valuemax="100"
-                        ></div>
+                        {{ today_order }} รายการ
                       </div>
                     </div>
                   </div>
@@ -90,7 +78,7 @@
           </div>
         </div>
 
-        <!-- Pending Requests Card Example -->
+        <!-- รายการทั้งหมด Card Example -->
         <div class="col-xl-3 col-md-6 mb-4">
           <div class="card border-left-warning shadow h-100 py-2">
             <div class="card-body">
@@ -99,9 +87,11 @@
                   <div
                     class="text-xs font-weight-bold text-warning text-uppercase mb-1"
                   >
-                    Pending Requests
+                    รายการทั้งหมด
                   </div>
-                  <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                  <div class="h5 mb-0 font-weight-bold text-gray-800">
+                    {{ all_order }} รายการ
+                  </div>
                 </div>
                 <div class="col-auto">
                   <i class="fas fa-comments fa-2x text-gray-300"></i>
@@ -111,18 +101,19 @@
           </div>
         </div>
       </div>
-      <div class="chart">
+      <!-- <div class="chart">
         <LineChart :chartData="chartData" :height="400" :width="1200" />
         <Bar :chartData="BarData" :options="options" :width="1200" />
-      </div>
+      </div> -->
       <Loading />
     </div>
   </div>
 </template>
 
 <script>
-import { Jwt } from '../libs/sessionStorage'
-import { mapMutations,mapState } from 'vuex'
+import axios from 'axios'
+import { Jwt, StoreAuth } from '../libs/sessionStorage'
+import { mapMutations, mapState } from 'vuex'
 import Loading from '../components/Loading.vue'
 import Sidebar from '../components/Sidebar.vue'
 import LineChart from '../components/LineChart.vue'
@@ -148,19 +139,49 @@ export default {
     Sidebar,
     Loading,
   },
-  mounted() {
+  async mounted() {
     this.setLoading(true)
     setTimeout(() => this.setLoading(false), 5000)
     if (!Jwt.getJwtToken()) this.$router.push('/login')
+  },
+  computed: {
+    ...mapState(['url']),
   },
   methods: {
     ...mapMutations({
       setLoading: 'loading/setLoading',
     }),
+    async fetchData() {
+      const body = { store: this.store }
+      const total = await axios.post(`${this.url}/orders/get/total/today`, body)
+      const month_total = await axios.post(
+        `${this.url}/orders/get/total/month`,
+        body
+      )
+      const today_order = await axios.post(
+        `${this.url}/orders/get/today_count`,
+        body
+      )
+      const all_order = await axios.post(
+        `${this.url}/orders/get/all_count`,
+        body
+      )
+      console.log(body);
+      console.log(all_order);
+      this.total = total.data.total
+      this.month_total = month_total.data.total
+      this.today_order = today_order.data.orderCount
+      this.all_order = all_order.data.orderCount
+    },
   },
   data() {
     return {
       time: null,
+      store: '',
+      total: 0,
+      month_total: 0,
+      today_order: 0,
+      all_order: 0,
       chartData: {
         labels: ['a', 'b', 'c'],
         datasets: [
@@ -204,11 +225,21 @@ export default {
       },
     }
   },
-  mounted() {
+  async mounted() {
     setInterval(() => {
-      this.time = moment(Date()).locale('th').format('dddd DD/MM/YYYY  HH:mm:ss')
+      this.time = moment(Date())
+        .locale('th')
+        .format('dddd DD/MM/YYYY  HH:mm:ss')
     }, 100)
     if (!Jwt.getJwtToken()) this.$router.push('/login')
+    const storeAuth = StoreAuth.getStoreAuth()
+    this.store = storeAuth.store
+    try {
+      if (this.store == null) this.$router.push('/login')
+      await this.fetchData()
+    } catch (err) {
+      console.log(err)
+    }
   },
 }
 </script>

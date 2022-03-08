@@ -1,11 +1,9 @@
 <template>
   <Layout>
     <h1>ร้านค้าทั้งหมด</h1>
-   
-      <span class="btn btn-success" >
-      <a href="/register" target="_blank">เพิ่มร้านค้า</a>
-      </span>
-    
+    <button class="btn btn-success" @click="Register" target="_blank">
+      เพิ่มร้านค้า
+    </button>
     <main>
       <table class="table">
         <thead>
@@ -27,7 +25,7 @@
             <td class="stock">{{ store.phone }}</td>
             <td>
               <label class="switch">
-                <!-- active == true -> ร้านเปิดอยู่ -->
+                <!-- active == true  ร้านเปิดอยู่ -->
                 <input
                   type="checkbox"
                   @click="Active(store.store)"
@@ -35,18 +33,17 @@
                   checked
                 />
 
-                <!-- active == false -> ร้านปิดอยู่ -->
-                <input
-                  type="checkbox"
-                  @click="InActive(store.store)"
-                  v-else
-                />
+                <!-- active == false  ร้านปิดอยู่ -->
+                <input type="checkbox" @click="InActive(store.store)" v-else />
                 <span class="slider round"></span>
               </label>
             </td>
             <!-- icon -->
             <td>
-              <a :href="`http://localhost:9000/${store.store}`" target="_blank">
+              <a
+                :href="`https://nuxt-eshop-shop.netlify.app/${store.store}`"
+                target="_blank"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -77,11 +74,17 @@ import Sidebar from '../../components/Sidebar.vue'
 import Layout from '../../components/Layout.vue'
 
 import { Jwt, StoreAuth } from '../../libs/sessionStorage'
+import { mapState } from 'vuex'
 import axios from 'axios'
 
 import '../../styles/layout.css'
 
 export default {
+  head() {
+    return {
+      title: 'ร้านค้าทั้งหมด',
+    }
+  },
   components: {
     Sidebar,
   },
@@ -93,11 +96,14 @@ export default {
   async mounted() {
     try {
       await this.fetchData()
-    } catch (err) {}
+      if (!Jwt.getJwtToken()) this.$router.push('/login')
+    } catch (err) {
+      console.log(err)
+    }
   },
   methods: {
     async fetchData() {
-      const { data } = await axios.get(`http://localhost:3000/api/v1/store`, {
+      const { data } = await axios.get(`${this.url}/store`, {
         headers: {
           'Content-Type': 'Application/JSON',
         },
@@ -109,18 +115,21 @@ export default {
     },
     async Active(store) {
       const body = {
-        active : false
+        active: false,
       }
-      await axios.put(`http://localhost:3000/api/v1/store/${store}`, body)
+      await axios.put(`${this.url}/store/${store}`, body)
       await this.fetchData()
     },
     async InActive(store) {
       const body = {
-        active : true
+        active: true,
       }
-      await axios.put(`http://localhost:3000/api/v1/store/${store}`, body)
+      await axios.put(`${this.url}/store/${store}`, body)
       await this.fetchData()
     },
+  },
+  computed: {
+    ...mapState(['url']),
   },
 }
 </script>

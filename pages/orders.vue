@@ -12,7 +12,7 @@
             <th scope="col">ราคารวม</th>
             <th scope="col">วันที่สั่งซื้อ</th>
             <th scope="col">สถานะ</th>
-            <th scope="col">แก้ไขข้อมูล</th>
+            <th scope="col">Tracking</th>
           </tr>
         </thead>
 
@@ -40,19 +40,25 @@
             <td class="total">{{ o.total }}</td>
 
             <td class="date">{{ moment(o.DateOrder) }}</td>
-
+            <td class="status">
+              <select class="form-select" @change="Status($event, o._id)">
+                <option
+                  v-for="a in actions"
+                  :key="a"
+                  :selected="a == o.status"
+                  :value="a"
+                >
+                  {{ a }}
+                </option>
+              </select>
+            </td>
+            <!--
             <td class="status" v-if="o.status == 'success'">สำเร็จ</td>
             <td class="status" v-if="o.status == 'cancel'">ยกเลิกแล้ว</td>
-            <td class="status" v-if="o.status != 'success' && o.status != 'cancel'">{{ o.status }}</td>
-            
-            <td class="row" v-if="o.status != 'success' && o.status != 'cancel'">
-              <button class="btn btn-success" @click="Success(o._id)">
-                ส่งแล้ว
-              </button>
-              &nbsp;
-              <button class="btn btn-danger" @click="Cancel(o._id)">
-                ยกเลิก
-              </button>
+            <td class="status" v-if="o.status != 'success' && o.status != 'cancel'">{{ o.status }}</td> -->
+
+            <td class="" v-if="o.status == 'กำลังจัดส่ง'">
+              {{ o.tracking }}
             </td>
           </tr>
         </tbody>
@@ -85,6 +91,8 @@ export default {
     return {
       store: null,
       orders: [],
+      actions: ['รอจัดส่ง', 'กำลังจัดส่ง', 'ได้รับสินค้า', 'ยกเลิก'],
+      Select: '',
     }
   },
   async mounted() {
@@ -102,18 +110,33 @@ export default {
           'Content-Type': 'Application/JSON',
         },
       })
-      console.log(data)
-      // console.log(data[0])
+      // console.log(data)
 
       this.orders = data
     },
-    async Success(id) {
-      const body = { status: 'success' }
-      await axios.put(`${this.url}/orders/${id}`, body)
-      await this.fetchData()
-    },
-    async Cancel(id) {
-      const body = { status: 'cancel' }
+    async Status(event, id) {
+      const value = event.target.value
+      // console.log(value)
+      if (value == 'กำลังจัดส่ง') {
+        this.$swal({
+          title: 'Tracking ID',
+          input: 'text',
+          confirmButtonText: 'ตกลง',
+          preConfirm: (ID) => {
+            return {
+              ID,
+            }
+          },
+        }).then(async (result) => {
+          const body = {
+            tracking: result.value.ID,
+          }
+          console.log(body)
+          await axios.put(`${this.url}/orders/${id}`, body)
+          await this.fetchData()
+        })
+      }
+      const body = { status: value }
       await axios.put(`${this.url}/orders/${id}`, body)
       await this.fetchData()
     },

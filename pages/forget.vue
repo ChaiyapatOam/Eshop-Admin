@@ -29,9 +29,8 @@
 
               <!-- button  -->
               <div class="form-group text-center">
-                <button class="btn btn-primary text-center">เข้าสู่ระบบ</button>
+                <button class="btn btn-primary text-center">ยืนยัน</button>
               </div>
-              <p class="text-center"> <nuxt-link to="/">ลืมรหัสผ่าน?</nuxt-link></p>
             </form>
           </div>
         </div>

@@ -1,70 +1,11 @@
 <template>
   <Layout>
-    <h1>ร้านค้าทั้งหมด</h1>
+    <h1>แก้ไขข้อมูล</h1>
     <button class="btn btn-success" @click="Register" target="_blank">
       เพิ่มร้านค้า
     </button>
     <main>
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">ชื่อร้านค้า</th>
-            <th scope="col">อีเมล</th>
-            <th scope="col">ที่อยู่</th>
-            <th scope="col">โทร</th>
-            <th scope="col">สถานะ</th>
-            <th scope="col">ไปที่ร้าน</th>
-          </tr>
-        </thead>
 
-        <tbody v-for="(store, index) in store" :key="index">
-          <tr>
-            <td class="name" scope="row">{{ store.store }}</td>
-            <td class="price">{{ store.email }}</td>
-            <td class="price">{{ store.address }}</td>
-            <td class="stock">{{ store.phone }}</td>
-            <td>
-              <label class="switch">
-                <!-- active == true  ร้านเปิดอยู่ -->
-                <input
-                  type="checkbox"
-                  @click="Active(store.store)"
-                  v-if="store.active == true"
-                  checked
-                />
-
-                <!-- active == false  ร้านปิดอยู่ -->
-                <input type="checkbox" @click="InActive(store.store)" v-else />
-                <span class="slider round"></span>
-              </label>
-            </td>
-            <!-- icon -->
-            <td>
-              <a
-                :href="`https://nuxt-eshop-shop.netlify.app/${store.store}`"
-                target="_blank"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-box-arrow-up-right"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"
-                  />
-                  <path
-                    fill-rule="evenodd"
-                    d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"
-                  /></svg
-              ></a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
     </main>
   </Layout>
 </template>
@@ -82,7 +23,7 @@ import '../styles/layout.css'
 export default {
   head() {
     return {
-      title: 'ร้านค้า',
+      title: 'แก้ไขข้อมูลร้านค้า',
     }
   },
   components: {

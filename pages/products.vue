@@ -3,7 +3,7 @@
     <div class="row">
       <h1>สินค้าในร้าน</h1>
     </div>
-    
+
     <button class="btn btn-success" @click="onAddProduct">เพิ่มสินค้า</button>
     <main>
       <table class="table" v-if="products">
@@ -39,21 +39,28 @@
                 />
 
                 <!-- active == false   -->
-                <input type="checkbox" @click="InActive(product.id)" v-else />
+                <input type="checkbox" @click="Stock" v-if="product.stock === 0" />
+                <input
+                  type="checkbox"
+                  @click="InActive(product.id)"
+                  v-if="product.active == false"
+                />
                 <span class="slider round"></span>
               </label>
             </td>
             <td class="edit">
               <button
-                class=" btn btn-warning"
+                class="btn btn-warning"
                 @click="onUpdateProduct(product.id)"
               >
                 <!-- <a :href="`/admin/product/${product._id}`"> แก้ไข</a> -->
                 แก้ไข
               </button>
               <button
-                class=" btn btn-danger"
-                @click="onDelete(product._id, index,product.image, product.name)"
+                class="btn btn-danger"
+                @click="
+                  onDelete(product._id, index, product.image, product.name)
+                "
               >
                 ลบ
               </button>
@@ -114,7 +121,7 @@ export default {
         }
       )
 
-      console.log(data[0].products)
+      // console.log(data[0].products)
 
       this.products = data[0].products
     },
@@ -202,9 +209,9 @@ export default {
   <input type="text" id="description" class="swal2-input" style='width: 200px;' placeholder="คำอธิบาย" value="${data.description}"><br>
   <label class='swal2-label' style="width: 80px;">สต็อค</label>
   <input type="number" id="stock" class="swal2-input" style='width: 200px;' placeholder="สต็อค" value="${data.stock}" >`,
-          cancelButtonText: "ยกเลิก",
+          cancelButtonText: 'ยกเลิก',
           confirmButtonText: 'แก้ไข',
-          showCancelButton:true,
+          showCancelButton: true,
           focusConfirm: false,
           reverseButtons: true,
           showCloseButton: true,
@@ -215,6 +222,21 @@ export default {
             const description = this.$swal
               .getPopup()
               .querySelector('#description').value
+            if (!name) {
+              this.$swal.showValidationMessage('โปรดกรอกชื่อสินค้า')
+            }
+            if (!price || price > 1000000) {
+              this.$swal.showValidationMessage('โปรดกรอกราคาสินค้า')
+            }
+            if (isNaN(price)) {
+              this.$swal.showValidationMessage('โปรดกรอกราคาสินค้าเป็นตัวเลข')
+            }
+            if (!stock) {
+              this.$swal.showValidationMessage('โปรดใส่สต็อคสินค้า')
+            }
+            if (stock <= 0) {
+              this.$swal.showValidationMessage('สต็อคสินค้าต้องมากกว่า 0')
+            }
             return {
               name,
               description,
@@ -256,7 +278,7 @@ export default {
         })
       }
     },
-    async onDelete(id, index,img, name) {
+    async onDelete(id, index, img, name) {
       this.$swal
         .fire({
           imageUrl: img,
@@ -295,6 +317,13 @@ export default {
       await axios.put(`${this.url}/products/${id}`, body)
       await this.fetchData()
     },
+    Stock(){
+      this.$swal({
+        type: 'info',
+        title: "กรุณาเพิ่มสต็อคสินค้า",
+        timer: 1500
+      })
+    }
   },
   computed: {
     ...mapState(['url']),
