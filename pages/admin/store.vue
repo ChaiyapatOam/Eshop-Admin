@@ -1,5 +1,12 @@
 <template>
-  <Layout>
+  <div>
+    <head>
+      <!-- Boxicons CDN Link -->
+      <link
+        href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
+        rel="stylesheet"
+      />
+    </head>
     <h1>ร้านค้าทั้งหมด</h1>
     <button class="btn btn-success" @click="Register" target="_blank">
       เพิ่มร้านค้า
@@ -13,6 +20,7 @@
             <th scope="col">ที่อยู่</th>
             <th scope="col">โทร</th>
             <th scope="col">สถานะ</th>
+            <th scope="col">แก้ไข</th>
             <th scope="col">ไปที่ร้าน</th>
           </tr>
         </thead>
@@ -38,35 +46,30 @@
                 <span class="slider round"></span>
               </label>
             </td>
-            <!-- icon -->
+            <td>
+              <button class="btn btn-primary" @click="Edit(store.id)">
+                แก้ไขข้อมูลร้านค้า
+              </button>
+              <!-- <button class="btn btn-warning" @click="Edit(store.store)">
+                แก้ไขรหัสผ่าน
+              </button> -->
+              <!-- <nuxt-link to="">แก้ไขข้อมูลร้านค้า</nuxt-link> -->
+            </td>
+            <!-- go to store -->
             <td>
               <a
                 :href="`https://nuxt-eshop-shop.netlify.app/${store.store}`"
                 target="_blank"
+                style="font-size: 20px"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-box-arrow-up-right"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"
-                  />
-                  <path
-                    fill-rule="evenodd"
-                    d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"
-                  /></svg
+                <i class="bx bx-link-external"></i
               ></a>
             </td>
           </tr>
         </tbody>
       </table>
     </main>
-  </Layout>
+  </div>
 </template>
 
 <script>
@@ -96,7 +99,7 @@ export default {
   async mounted() {
     try {
       await this.fetchData()
-      if (!Jwt.getJwtToken()) this.$router.push('/login')
+      if (!Jwt.getJwtToken()) this.$router.push('/admin/login')
     } catch (err) {
       console.log(err)
     }
@@ -111,22 +114,26 @@ export default {
       this.store = data
     },
     Register() {
-      this.$router.push('/register')
+      this.$router.push('/admin/addstore')
     },
     async Active(store) {
       const body = {
         active: false,
       }
-      await axios.put(`${this.url}/store/${store}`, body)
+      await axios.put(`${this.url}/store/status/${store}`, body)
       await this.fetchData()
     },
     async InActive(store) {
       const body = {
         active: true,
       }
-      await axios.put(`${this.url}/store/${store}`, body)
+      await axios.put(`${this.url}/store/status/${store}`, body)
       await this.fetchData()
     },
+    Edit(id) {
+      this.$router.push(`/admin/edit/${id}`)
+    },
+    onDelete(id) {}, 
   },
   computed: {
     ...mapState(['url']),

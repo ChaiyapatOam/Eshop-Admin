@@ -2,6 +2,7 @@
   <Layout>
     <h1>รายการสั่งซื้อ</h1>
     <main>
+      <div class="text-center">
       <table class="table" v-if="orders">
         <thead>
           <tr>
@@ -57,12 +58,13 @@
             <td class="status" v-if="o.status == 'cancel'">ยกเลิกแล้ว</td>
             <td class="status" v-if="o.status != 'success' && o.status != 'cancel'">{{ o.status }}</td> -->
 
-            <td class="" v-if="o.status == 'กำลังจัดส่ง'">
+            <td class="" v-if="o.status == 'กำลังจัดส่ง' ||o.status == 'ได้รับสินค้า' ">
               {{ o.tracking }}
             </td>
           </tr>
         </tbody>
       </table>
+      </div>
     </main>
   </Layout>
 </template>

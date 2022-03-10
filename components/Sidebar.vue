@@ -22,9 +22,13 @@
               <h1 class="links_name" v-if="handleResize">{{ p.name }}</h1>
             </nuxt-link>
           </li>
+          <!-- "ร้านค้า" "/store" "coin-stack" -->
 
           <li>
-            <a :href="`https://nuxt-eshop-shop.netlify.app/${this.store}`" target="_blank">
+            <a
+              :href="`https://nuxt-eshop-shop.netlify.app/${this.store}`"
+              target="_blank"
+            >
               <i class="bx bx-link-external"></i>
               <h1 class="links_name" v-if="handleResize">ไปที่หน้าร้าน</h1>
             </a>

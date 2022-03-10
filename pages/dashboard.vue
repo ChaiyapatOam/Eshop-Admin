@@ -166,8 +166,8 @@ export default {
         `${this.url}/orders/get/all_count`,
         body
       )
-      console.log(body);
-      console.log(all_order);
+      // console.log(body);
+      // console.log(all_order);
       this.total = total.data.total
       this.month_total = month_total.data.total
       this.today_order = today_order.data.orderCount

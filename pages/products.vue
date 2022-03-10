@@ -39,7 +39,11 @@
                 />
 
                 <!-- active == false   -->
-                <input type="checkbox" @click="Stock" v-if="product.stock === 0" />
+                <input
+                  type="checkbox"
+                  @click="Stock"
+                  v-if="product.stock === 0"
+                />
                 <input
                   type="checkbox"
                   @click="InActive(product.id)"
@@ -134,7 +138,7 @@ export default {
   <label class='swal2-label' style="width: 80px;">ราคา</label>
   <input type="text" id="price"  class="swal2-input" style='width: 200px;' placeholder="ราคา"> <br>
   <label class='swal2-label' style="width: 80px;">คำอธิบาย</label>
-  <input type="text" id="description" class="swal2-input" style='width: 200px;' placeholder="คำอธิบาย"> <br>
+  <textarea type="text" id="description" class="swal2-textarea" style='width: 200px; vertical-align: middle;' placeholder="คำอธิบาย" ></textarea><br>
   <label class='swal2-label' style="width: 80px;">สต็อค</label>
   <input type="number" id="stock" class="swal2-input" style='width: 200px;' placeholder="สต็อค" >
   <input type="file" accept="image/png, image/jpeg" id="image" style='width: 300px;' class="swal2-input" >`,
@@ -204,9 +208,9 @@ export default {
   <label class='swal2-label' style="width: 80px;">ชื่อสินค้า</label>
   <input type="text" id="name" class="swal2-input" style='width: 200px;' placeholder="ชื่อสินค้า" value="${data.name}"> <br>
   <label class='swal2-label' style="width: 80px;">ราคา</label>
-  <input type="text" id="price"  class="swal2-input" style='width: 200px;' placeholder="ราคา" value="${data.price}"> <br>
-  <label class='swal2-label' style="width: 80px;">คำอธิบาย</label>
-  <input type="text" id="description" class="swal2-input" style='width: 200px;' placeholder="คำอธิบาย" value="${data.description}"><br>
+  <input type="text" id="price"  class="swal2-input" style='width: 200px; ' placeholder="ราคา" value="${data.price}"> <br>
+  <label class='swal2-label' >คำอธิบาย</label> &nbsp; 
+  <textarea type="text" id="description" class="swal2-textarea" style='width: 200px; vertical-align: middle;' placeholder="คำอธิบาย" >${data.description}</textarea><br>
   <label class='swal2-label' style="width: 80px;">สต็อค</label>
   <input type="number" id="stock" class="swal2-input" style='width: 200px;' placeholder="สต็อค" value="${data.stock}" >`,
           cancelButtonText: 'ยกเลิก',
@@ -317,13 +321,13 @@ export default {
       await axios.put(`${this.url}/products/${id}`, body)
       await this.fetchData()
     },
-    Stock(){
+    Stock() {
       this.$swal({
         type: 'info',
-        title: "กรุณาเพิ่มสต็อคสินค้า",
-        timer: 1500
+        title: 'กรุณาเพิ่มสต็อคสินค้า',
+        timer: 1500,
       })
-    }
+    },
   },
   computed: {
     ...mapState(['url']),
