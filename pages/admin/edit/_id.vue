@@ -65,7 +65,7 @@
                 @click="sw = !sw"
                 style="cursor: pointer"
               >
-                <i class="bx bx-edit-alt"><p>แก้ไขรหัสผ่าน</p></i>
+                <i class="bx bx-edit-alt">แก้ไขรหัสผ่าน</i>
               </div>
             </form>
             <!-- button  -->
@@ -73,7 +73,7 @@
               <button class="btn small btn-danger" @click="Back">
                 ย้อนกลับ
               </button>
-              <button class="btn btn-primary" @click="Edit">แก้ไข</button>
+              <button class="btn btn-primary" @click="Edit">บันทึก</button>
             </div>
 
             <!-- Form Password -->
