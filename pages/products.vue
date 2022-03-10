@@ -214,7 +214,7 @@ export default {
   <label class='swal2-label' style="width: 80px;">สต็อค</label>
   <input type="number" id="stock" class="swal2-input" style='width: 200px;' placeholder="สต็อค" value="${data.stock}" >`,
           cancelButtonText: 'ยกเลิก',
-          confirmButtonText: 'แก้ไข',
+          confirmButtonText: 'บันทึก',
           showCancelButton: true,
           focusConfirm: false,
           reverseButtons: true,

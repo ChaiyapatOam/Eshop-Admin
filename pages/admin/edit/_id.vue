@@ -80,7 +80,7 @@
             <form @submit.prevent="handlePassword" v-if="this.sw == true">
               <!-- password  -->
               <div class="form-group">
-                <label for="password">รหัสผ่าน</label>
+                <label for="password">รหัสผ่านใหม่</label>
                 <input
                   :type="type"
                   v-model="user.password"
@@ -105,7 +105,7 @@
 
               <!-- Confirm password  -->
               <div class="form-group">
-                <label for="confirmPassword">รหัสผ่านอีกครั้ง</label>
+                <label for="confirmPassword">รหัสผ่านใหม่อีกครั้ง</label>
                 <input
                   :type="type"
                   v-model="user.confirmPassword"
