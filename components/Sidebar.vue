@@ -184,6 +184,7 @@ export default {
   white-space: nowrap;
 }
 .sidebar .nav-links .log_out {
+  cursor: pointer;
   position: absolute;
   bottom: 0;
   width: 100%;
