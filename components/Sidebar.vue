@@ -26,7 +26,7 @@
 
           <li>
             <a
-              :href="`https://nuxt-eshop-shop.netlify.app/${this.store}`"
+              :href="`https://www.unforgettravel.com/${this.store}`"
               target="_blank"
             >
               <i class="bx bx-link-external"></i>

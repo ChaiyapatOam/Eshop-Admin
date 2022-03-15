@@ -58,7 +58,7 @@
             <td class="status" v-if="o.status == 'cancel'">ยกเลิกแล้ว</td>
             <td class="status" v-if="o.status != 'success' && o.status != 'cancel'">{{ o.status }}</td> -->
 
-            <td class="" v-if="o.status == 'กำลังจัดส่ง' ||o.status == 'ได้รับสินค้า' ">
+            <td class="" v-if="o.status == 'กำลังจัดส่ง' ||o.status == 'ได้รับสินค้า' ||o.status == 'ยกเลิก' ">
               {{ o.tracking }}
             </td>
           </tr>
